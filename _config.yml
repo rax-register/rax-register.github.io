@@ -12,7 +12,7 @@ github_username: rax-register
 
 # Email and twitter are optional:
 email: rax.register@gmail.com
-twitter_username: @rax_register
+twitter_username: rax_register
 
 # Set this to true to get LaTeX math equation support
 use_math:
