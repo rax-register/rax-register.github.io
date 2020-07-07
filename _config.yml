@@ -7,7 +7,7 @@
 # https://learnxinyminutes.com/docs/yaml/
 
 title: mov rax, qword ptr [./data]
-description: even rax needs a place to accumulate things...
+description: one register's journey
 github_username: rax-register
 
 # Email and twitter are optional:
