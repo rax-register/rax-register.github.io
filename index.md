@@ -1,4 +1,4 @@
-# rax's accumulator
+# register's accumulator
 
 ![rax logo](images/rax_intel.jpg)
 
