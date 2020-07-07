@@ -23,6 +23,9 @@ google_analytics:
 # Everything below here can be ignored, unless you want to change the theme entirely
 theme: minima
 
+minima:
+  skin: dark
+
 plugins:
   - jekyll-feed
   - jekyll-gist
