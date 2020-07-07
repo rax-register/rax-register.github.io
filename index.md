@@ -2,6 +2,6 @@ Hello and welcome to this blog. Edit the `index.md` file to change this content.
 
 ![rax logo](images/rax_intel.jpg)
 
-## This is a title
+## mov rax, dword ptr [./data]
 
-And you can include links, like this [link to hackthebox.eu](https://www.hackthebox.eu). Posts will appear after this file. 
+A place for notes on machines from Hack the Box: [hackthebox.eu](https://www.hackthebox.eu). 
