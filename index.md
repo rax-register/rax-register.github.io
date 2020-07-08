@@ -19,7 +19,7 @@ Set up our nc listener:
 
 These commands are shown so you can copy the whole line and not have to remove a prompt or other extra characters. In most cases, I also post a screenshot of the command and the expected output.
 
-![](/images/lame/18. nc_listen.png "listener setup")
+![](/images/nc_listen.png "listener setup")
 
 4. Code examples for you to use will appear separately for ease of copying/pasting and maintaining any required formatting. 
 
