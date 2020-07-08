@@ -7,5 +7,5 @@ A place for notes on machines from Hack the Box: [https://www.hackthebox.eu](htt
 <p>&nbsp;</p>
 ## Posts
 
-### 1. Lame : 2020-07-07 
+### 1. HTB Lame : 2020-07-07 
 [https://rax-register.github.io/2020/07/07/htb-lame.html](https://rax-register.github.io/2020/07/07/htb-lame.html)
