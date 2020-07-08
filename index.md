@@ -11,7 +11,7 @@ A place for notes on machines from Hack the Box: [https://www.hackthebox.eu](htt
 
 **-2- Links and tools change over time. If something on here is broken or does not work as shown, please reach out via discord or e-mail.**
 
-**-3- Commands in a Linux terminal or Windows cmd prompt will be described and shown like this. **
+**-3- Commands in a Linux terminal or Windows cmd prompt will be described and shown like this.**
 
 Set up our nc listener:
 
