@@ -100,7 +100,7 @@ Next, let's see what Google results we can find:
 
 The top two results mention MS08-067, so that is our first avenue we will explore.
 
-The rapid7.com link will most likely contain details for a Metasploit module, so we can start there.
+The rapid7.com link will most likely contain details for a Metasploit module, so we can start there: [https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi](https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi)
 
 ![](/images/legacy/9. rapid7_ms08-067.png "Rapid7")
 
@@ -540,23 +540,11 @@ smb-exploit.py
 
 =======================================================
 
-1. Link: [https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py](https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py)
-2. Link: []()
-3. Link: []()
-4. Link: []()
-5. Link: []()
+1. MITRE CVE list entry: [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-4250](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-4250)
+2. Rapid7 Metasploit module: [https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi](https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi)
+3. Github Python-based exploit script: [https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py](https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py)
 
 <p>&nbsp;</p>
-=======================================================
-
-## Basic formatting
-
-=======================================================
-
-You can use *italics*, **bold**, `code font text`, and create [links](https://www.markdownguide.org/cheat-sheet/). Here's a footnote [^1]. Here's a horizontal rule:
-
-<p>&nbsp;</p>
-
 =======================================================
 
 ![rax logo](/images/rax_intel.png)
