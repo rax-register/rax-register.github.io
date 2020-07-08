@@ -35,6 +35,6 @@ hello.py:
 
 ### 1. HTB Lame : 2020-07-07 
 [https://rax-register.github.io/2020/07/07/htb-lame.html](https://rax-register.github.io/2020/07/07/htb-lame.html)
-<p>&nbsp;</p>
+
 ### 2. HTB Legacy : 2020-07-08
 [https://rax-register.github.io/2020/07/08/htb-legacy.html](https://rax-register.github.io/2020/07/08/htb-legacy.html)
