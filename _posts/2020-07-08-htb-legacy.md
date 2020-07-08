@@ -26,11 +26,10 @@ Legacy is another early, easy machine from the Hack the Box platform.
 
 =======================================================
 
-To root this machine we will use Metasploit to exploit a vulnerable version of Unix Samba Server documented in MS08-067.  This particular exploit is a Remote Command Injection Vulnerability and obtains root privileges instantly.
+To root this machine we will use Metasploit to exploit a vulnerability in NetAPI32.dll through the Server Service and a specially crafted Remote Procedure Call, as documented in MS08-067.  This particular exploit achives remote code execution as NT/AUTHORITY SYSTEM (root) level privileges instantly.
 After using Metasploit, we will also find a python script which exploits the same vulnerability, generate our own shellcode using msfvenom, and then run the python script for manual exploitation.
 
 <p>&nbsp;</p>
-
 
 =======================================================
 
@@ -541,8 +540,9 @@ smb-exploit.py
 =======================================================
 
 1. MITRE CVE list entry: [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-4250](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-4250)
-2. Rapid7 Metasploit module: [https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi](https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi)
-3. Github Python-based exploit script: [https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py](https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py)
+2. Microsoft Security Bulletin entry: [https://docs.microsoft.com/en-us/security-updates/securitybulletins/2008/ms08-067](https://docs.microsoft.com/en-us/security-updates/securitybulletins/2008/ms08-067)
+3. Rapid7 Metasploit module: [https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi](https://www.rapid7.com/db/modules/exploit/windows/smb/ms08_067_netapi)
+4. Github Python-based exploit script: [https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py](https://github.com/jivoi/pentest/blob/master/exploit_win/ms08-067.py)
 
 <p>&nbsp;</p>
 =======================================================
