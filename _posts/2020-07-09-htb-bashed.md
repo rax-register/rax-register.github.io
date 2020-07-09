@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Bashed is a Hack the Box example of system misconfiguration which allows a remote attacker to gain access and escalate to root privileges. The screenshots for this write-up were captured on 7 May 2020 as I completed the machine. This is usefule to remember a bit later in the write-up as you will see.
+Bashed is a Hack the Box example of system misconfigurations which allow a remote attacker to gain access and escalate to root privileges. The screenshots for this write-up were captured on 7 May 2020 as I completed the machine. This is useful to remember a bit later in the write-up as you will see. Of note, there is no need for Metasploit as everything can be done with fairly simple linux and python commands which makes this a perfect machine to attempt when just starting out.
 
 <p>&nbsp;</p>
 =======================================================
@@ -25,7 +25,7 @@ Bashed is a Hack the Box example of system misconfiguration which allows a remot
 
 =======================================================
 
-The machine has an open web shell which allows us to spawn an interactive shell.  From the interactive shell we enumerate interesting files and discover another system misconfiguration which allows us to modify a python script which we call via sudo and obtain root privileges.
+Bashed has an open web shell (misconfiguration #1) which allows us to spawn an interactive shell. From the interactive shell we can use sudo to move laterally to another user (misconfiguration #2). As the second user, we enumerate interesting files and discover we can modify a python script which is executed periodically by a cron job running as root (misconfiguration #3). Modifying the python script allows us to obtain a root shell.
 
 -1- nmap
 
@@ -33,13 +33,13 @@ The machine has an open web shell which allows us to spawn an interactive shell.
 
 -3- php web shell
 
--4- bash reverse shell
+-4- python reverse shell
 
 -5- nc
 
--6- python scripting
+-6- sudo -u
 
--7- abuse system misconfiguration (sudo permissions)
+-7- python script modification for a second reverse shell
 
 <p>&nbsp;</p>
 =======================================================
