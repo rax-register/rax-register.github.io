@@ -1,6 +1,6 @@
 # register's accumulator
 
-A simple place to keep notes and write-ups about hackthebox machines.
+A simple place to keep notes and write-ups about Hack the Box machines and other resources.
 
 <p>&nbsp;</p>
 
