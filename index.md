@@ -38,3 +38,6 @@ hello.py:
 
 ### 2. HTB Legacy : 2020-07-08
 [https://rax-register.github.io/2020/07/08/htb-legacy.html](https://rax-register.github.io/2020/07/08/htb-legacy.html)
+
+### 3. HTB Blue : 2020-07-08
+[https://rax-register.github.io/2020/07/08/htb-blue.html](https://rax-register.github.io/2020/07/08/htb-blue.html)
