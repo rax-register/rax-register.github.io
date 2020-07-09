@@ -14,6 +14,10 @@ github_username: rax-register
 email: rax.register@gmail.com
 twitter_username: rax_register
 
+# Remove "View on Github" button from the top of the page.
+github:
+  is_project_page: false
+
 # Set this to true to get LaTeX math equation support
 use_math:
 
