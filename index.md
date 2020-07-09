@@ -46,3 +46,6 @@ hello.sh:
 
 ### 3. HTB Blue : 2020-07-08
 [https://rax-register.github.io/2020/07/08/htb-blue.html](https://rax-register.github.io/2020/07/08/htb-blue.html)
+
+### 4. HTB Bashed : 2020-07-08
+[https://rax-register.github.io/2020/07/09/htb-bashed.html](https://rax-register.github.io/2020/07/09/htb-bashed.html)
