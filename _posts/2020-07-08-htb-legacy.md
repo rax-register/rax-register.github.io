@@ -29,6 +29,22 @@ Legacy is another early, easy machine from the Hack the Box platform.
 To root this machine we will use Metasploit to exploit a vulnerability in NetAPI32.dll through the Server Service and a specially crafted Remote Procedure Call, as documented in MS08-067.  This particular exploit achives remote code execution as NT/AUTHORITY SYSTEM (root) level privileges instantly.
 After using Metasploit, we will also find a python script which exploits the same vulnerability, generate our own shellcode using msfvenom, and then run the python script for manual exploitation.
 
+-1- nmap
+
+-2- smbclient
+
+-3- msfconsole
+
+-4- msf module: auxiliary/scanner/smb/smb_version
+
+-5- msf module: exploit/windows/smb/ms08_067_netapi
+
+-6- python scripting
+
+-7- msfvenom to generate shellcode for use in the python script
+
+-8- nc -lvnp
+
 <p>&nbsp;</p>
 
 =======================================================
