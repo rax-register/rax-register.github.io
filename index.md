@@ -9,7 +9,7 @@ A place for notes on machines from Hack the Box: [https://www.hackthebox.eu](htt
 
 -1- This site is meant as an educational resource and notes repository for my own journey. You must have permission of the machine or site owner before attempting any of the techniques or exploits described here.
 
--2- Links and tools change over time. If something on here is broken or does not work as shown, please reach out via discord or e-mail.
+-2- Links and tools change over time. For this reason, I have posted a copy of any code or script which I used in the write-up to my own github page in case the current tool continues to receive updates that change functionality or break things. The code itself or links to my github repository are in the **Final Code** section of each post. If something on here is broken or does not work as shown, please reach out via discord or e-mail and I will try to help.
 
 -3- Commands in a Linux terminal or Windows cmd prompt will be described and shown like this.
 
@@ -21,14 +21,17 @@ These commands are shown so you can copy the whole line and not have to remove a
 
 ![](images/nc_listen.png "listener setup")
 
--4- Code examples for you to use will appear separately for ease of copying/pasting and maintaining any required formatting.
+-4- Smaller code or script examples will appear separately for ease of copying/pasting and maintaining any required formatting.
 
 hello.py:
 
     #!/usr/bin/python3
     print("Hello World!")
-            
 
+hello.sh:
+
+    #!/bin/bash
+    printf "Hello World!\n"
 
 <p>&nbsp;</p>
 ## Posts
