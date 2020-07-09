@@ -3,6 +3,7 @@
 A simple place to keep notes and write-ups about hackthebox machines.
 
 <p>&nbsp;</p>
+
 ## Read this First:
 
 -1- This site is meant as an educational resource and notes repository for my own journey. You must have permission of the machine or site owner before attempting any of the techniques or exploits described here.
