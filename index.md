@@ -57,3 +57,6 @@ hello.sh:
 
 ### 6. HTB Jerry : 2020-07-09
 [https://rax-register.github.io/2020/07/09/htb-jerry.html](https://rax-register.github.io/2020/07/09/htb-jerry.html)
+
+### 7. HTB Nibbles : 2020-07-10
+[https://rax-register.github.io/2020/07/10/htb-nibbles.html](https://rax-register.github.io/2020/07/10/htb-nibbles.html)
