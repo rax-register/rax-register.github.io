@@ -53,7 +53,6 @@ We start off with an easy nmap scan:
     nmap -A -T4 10.10.10.75
 
 ![](/images/nibbles/2. nmap.png)
-![](/images/jerry/2. nmap.png)
 
 Browse to the website:
 
