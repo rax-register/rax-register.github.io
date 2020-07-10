@@ -23,6 +23,8 @@ google_analytics:
 # Everything below here can be ignored, unless you want to change the theme entirely
 theme: jekyll-theme-midnight
 
+show_downloads: true
+
 author: register
 
 plugins:
