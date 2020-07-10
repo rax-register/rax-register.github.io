@@ -52,3 +52,6 @@ hello.sh:
 
 ### 5. HTB Devel : 2020-07-09
 [https://rax-register.github.io/2020/07/09/htb-devel.html](https://rax-register.github.io/2020/07/09/htb-devel.html)
+
+### 6. HTB Jerry : 2020-07-09
+[https://rax-register.github.io/2020/07/09/htb-jerry.html](https://rax-register.github.io/2020/07/09/htb-jerry.html)
