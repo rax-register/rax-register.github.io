@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Broad introduction to the machine.
+Optimum is an early, easy 64-bit Windows machine on the Hack the Box platform, released in early 2017.
 
 <p>&nbsp;</p>
 =======================================================
@@ -25,7 +25,7 @@ Broad introduction to the machine.
 
 =======================================================
 
-Summary paragraph.
+Optimum presents a vulnerable file server which we can exploit to gain initial access. From there, we have multiple options to escalate privileges to system level. Our chosen metasploit privesc module requires a payload tweak from the default setting, and during maual exploitation we will work with native (certutil.exe) and non-native (nc.exe) Windows binaries to achieve success.
 
 -1- nmap
 
@@ -33,7 +33,7 @@ Summary paragraph.
 
 -3- msf module: post/multi/recon/local_exploit_suggester
 
--4- msf module: exploit/windows/local/ms16_032_secondary_logon_handle_privesc (requires a payload tweak)
+-4- msf module: exploit/windows/local/ms16_032_secondary_logon_handle_privesc (payload tweak)
 
 -5- python scripting 39161.py
 
