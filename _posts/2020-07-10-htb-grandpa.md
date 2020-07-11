@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Broad introduction to the machine.
+Grandpa represents an older Windows target
 
 <p>&nbsp;</p>
 =======================================================
@@ -25,7 +25,7 @@ Broad introduction to the machine.
 
 =======================================================
 
-We spend some time in the meterpreter session on Grandpa and work through a minor issue with our exploit. We then use Metasploit's local exploit suggester to find a privilege escalation option and gain system privileges.
+Grandpa runs an old, vulnerable version of Microsoft's IIS webserver. We spend some time in the meterpreter session to work through a minor issue with our exploit which yields minimal privileges in the initial shell. We then use Metasploit's local exploit suggester to find a privilege escalation option and gain system privileges. For manual exploitation, we find a python script on github to obtain a shell and then use a second python script to find a privilege escalation option. This machine is also vulnerable to token smuggling, so for manual exploitation we explore a different option from that which is offered by Metasploit and by the python scripts we run. 
 
 -1- nmap
 
@@ -33,13 +33,23 @@ We spend some time in the meterpreter session on Grandpa and work through a mino
 
 -3- msf module: exploit/windows/iis/iis_webdav_scstoragepathfromurl
 
--4- process migration
+-4- meterpreter process migration
 
 -5- msfmodule: post/multi/recon/local_exploit_suggester
 
--6- 
+-6- msfmodule: exploit/windows/local/ms15_051_client_copy_image
 
--7- 
+-7- python iis6 reverse shell script
+
+-8- Windows-Exploit-Suggester.py
+
+-9- churrasco.exe
+
+-10- python ftp server (pyftpdlib)
+
+-11- ftp scripting on Windows
+
+-12- nc
 
 <p>&nbsp;</p>
 =======================================================
@@ -54,7 +64,7 @@ We start with our usual nmap command:
 
 ![](/images/grandpa/2. nmap.png)
 
-We see Port 80 open and that's it. Microsoft IIS 6.0. Let's Google that:
+We see port 80 open and that's it. Microsoft IIS 6.0. Let's Google that:
 
     https://en.wikipedia.org/wiki/Internet_Information_Services
 
@@ -80,7 +90,7 @@ And two solid results are in the top two:  rapid7 and exploitdb:
 
 [https://www.exploit-db.com/exploits/41738](https://www.exploit-db.com/exploits/41738)
 
-Rapid7 is a metasploit module so let's start there.
+Rapid7 is a Metasploit module so let's start there.
 
 
 <p>&nbsp;</p>
@@ -119,7 +129,7 @@ We have a meterpreter shell.  Let's get some of the basics:
 
 ![](/images/grandpa/9. getuid.png)
 
-Okay, so the “Access is denied” for getuid is different.  It likely means we have exploited onto this machine as a process or service and not as a user. 
+The “Access is denied” for getuid is different. It likely means we have exploited onto this machine as a process or service and not as a user. 
 
 Fortunately we can migrate over to another process. First we will list running processes:
 
@@ -127,7 +137,9 @@ Fortunately we can migrate over to another process. First we will list running p
 
 ![](/images/grandpa/10. ps.png)
 
-To migrate to a different process, we issue the “migrate” command and the process id (PID). Let's try migrating into process 488:
+To migrate to a different process, we issue the “migrate” command and the process id (PID). Any process that does not show the user or path is likely out of reach (run by NT/Authority System or a user with privileges we cannot access). 
+
+In this case we have one candidate so let's try migrating into process 488:
 
     migrate 488
 
@@ -227,9 +239,7 @@ Now we need to take a look at the code and make any required modifications to ge
 
     gedit 41738.py &
     
-Looking through the provided code we see it is a ROP chain against ScStoragePathFromUrl, but no CVE is provided, and the code we have is proof of concept to pop a calc.exe. 
-
-Google "CVE-2017–7269 exploit github". 
+Looking through the provided code we see it is a ROP chain against ScStoragePathFromUrl, but no CVE is provided, and the code we have is proof of concept to pop a calc.exe. We could attempt to modify it, but in this case we can search for another option: Google "CVE-2017–7269 exploit github". 
 
 ![](/images/grandpa/22. google.png)
 
@@ -362,13 +372,7 @@ And there are our flags.
 
 =======================================================
 
-<file-name.py/.sh>
-
-    insert code here
-    # code blocks ignore the rest of markdown formatting
-    # so you can leave # characters to denote comments
-    # without setting new headings
-        
+iis6-exploit.py: [https://github.com/rax-register/code_examples/blob/master/iis6-exploit.py](https://github.com/rax-register/code_examples/blob/master/iis6-exploit.py)
 
 <p>&nbsp;</p>
 =======================================================
@@ -379,9 +383,9 @@ And there are our flags.
 
 1. Rapid7 Metasploit module entry: [https://www.rapid7.com/db/modules/exploit/windows/iis/iis_webdav_scstoragepathfromurl](https://www.rapid7.com/db/modules/exploit/windows/iis/iis_webdav_scstoragepathfromurl)
 2. Exploit-db entry: [https://www.exploit-db.com/exploits/41738](https://www.exploit-db.com/exploits/41738)
-3. Link: []()
-4. Link: []()
-5. Link: []()
+3. g0rx github repo: [https://github.com/g0rx/iis6-exploit-2017-CVE-2017-7269/blob/master/iis6%20reverse%20shell](https://github.com/g0rx/iis6-exploit-2017-CVE-2017-7269/blob/master/iis6%20reverse%20shell)
+4. Windows Exploit Suggester on github: [https://github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+5. Windows token smuggling (churrasco.exe): [https://medium.com/@nmappn/windows-privelege-escalation-via-token-kidnapping-6195edd2660e](https://medium.com/@nmappn/windows-privelege-escalation-via-token-kidnapping-6195edd2660e)
 
 <p>&nbsp;</p>
 
