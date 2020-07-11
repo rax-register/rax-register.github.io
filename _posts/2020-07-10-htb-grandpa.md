@@ -237,6 +237,9 @@ Now we need to take a look at the code and make any required modifications to ge
 
     gedit 41738.py &
     
+![](/images/grandpa/21. 41738.png)
+![](/images/grandpa/21. 41738_2.png)
+
 The comments in the code state it is a buffer overflow ROP chain against ScStoragePathFromUrl, but no CVE is provided. The code we have is proof of concept to execute calc.exe through localhost (127.0.0.1:80). We could easily modify it and provide the IP address for Grandpa, but the rest of the code is still set for calc.exe and to modify it is beyond the scope of this write-up.
 
 After searching for a bit, I found the CVE for this WebDAV exploit is CVE-2017-7269. That led me to search for another option on github: Google "CVE-2017–7269 exploit github". 
