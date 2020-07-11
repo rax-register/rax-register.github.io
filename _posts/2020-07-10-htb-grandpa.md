@@ -237,13 +237,15 @@ Now we need to take a look at the code and make any required modifications to ge
 
     gedit 41738.py &
     
-Looking through the provided code we see it is a ROP chain against ScStoragePathFromUrl, but no CVE is provided, and the code we have is proof of concept to pop a calc.exe. (Note: Will add a section to modify 41738.py at a later time).
+The comments in the code state it is a buffer overflow ROP chain against ScStoragePathFromUrl, but no CVE is provided. The code we have is proof of concept to execute calc.exe through localhost (127.0.0.1:80). We could easily modify it and provide the IP address for Grandpa, but the rest of the code is still set for calc.exe and to modify it is beyond the scope of this write-up.
 
-We could attempt to modify it, but in this case we can search for another option: Google "CVE-2017–7269 exploit github". 
+After searching for a bit, I found the CVE for this WebDAV exploit is CVE-2017-7269. That led me to search for another option on github: Google "CVE-2017–7269 exploit github". 
 
 ![](/images/grandpa/22. google.png)
 
 A github repo by g0rx should be one of the choices: [https://github.com/g0rx/iis6-exploit-2017-CVE-2017-7269/blob/master/iis6%20reverse%20shell](https://github.com/g0rx/iis6-exploit-2017-CVE-2017-7269/blob/master/iis6%20reverse%20shell)
+
+This python script by g0rx is a modification of 41738.py.
 
 ![](/images/grandpa/23. g0rx.png)
 
