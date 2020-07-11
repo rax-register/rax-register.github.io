@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Grandpa represents an older Windows target
+Grandpa represents an older Windows target in the easy category on Hack the Box. It's age and vulnerable software offer several paths to system privileges. 
 
 <p>&nbsp;</p>
 =======================================================
