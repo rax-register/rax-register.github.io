@@ -10,7 +10,6 @@ Contents:
 {:toc}
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Introduction
@@ -20,7 +19,6 @@ Contents:
 Broad introduction to the machine.
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Tools & Techniques Used
@@ -44,7 +42,6 @@ We spend some time in the meterpreter session on Grandpa and work through a mino
 -7- 
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Scanning and Enumeration
@@ -87,7 +84,6 @@ Rapid7 is a metasploit module so let's start there.
 
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Exploitation using Metasploit
@@ -207,7 +203,6 @@ And there are our flags:
 
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Manual Exploitation
@@ -279,7 +274,7 @@ First, let's grab our systeminfo and run it against a Windows exploit suggester 
     systeminfo
 
 ![](/images/grandpa/29. systeminfo.png)
-<output snipped>
+Note: output snipped from the above screenshot.
 
 Now, copy/paste all of the output to a “grandpa.systeminfo” back on your Kali machine:
 
@@ -361,7 +356,6 @@ And there are our flags.
 
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Final Code
@@ -377,7 +371,6 @@ And there are our flags.
         
 
 <p>&nbsp;</p>
-
 =======================================================
 
 ## Links & Additional Reading
