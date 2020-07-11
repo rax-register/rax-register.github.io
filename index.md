@@ -60,3 +60,6 @@ hello.sh:
 
 ### 7. HTB Nibbles : 2020-07-10
 [https://rax-register.github.io/2020/07/10/htb-nibbles.html](https://rax-register.github.io/2020/07/10/htb-nibbles.html)
+
+### 8. HTB Grandpa : 2020-07-10
+[https://rax-register.github.io/2020/07/10/htb-grandpa.html](https://rax-register.github.io/2020/07/10/htb-grandpa.html)
