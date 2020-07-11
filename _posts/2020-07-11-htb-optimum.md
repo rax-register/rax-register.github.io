@@ -29,17 +29,21 @@ Summary paragraph.
 
 -1- nmap
 
--2- 
+-2- msf module: exploit/windows/http/rejetto_hfs_exec
 
--3- 
+-3- msf module: post/multi/recon/local_exploit_suggester
 
--4- 
+-4- msf module: exploit/windows/local/ms16_032_secondary_logon_handle_privesc (requires a payload tweak)
 
--5- 
+-5- python scripting 39161.py
 
--6- 
+-6- nc & nc.exe
 
--7- 
+-7- windows-exploit-suggester.py
+
+-8- MS16-098 privesc
+
+-9- certutil
 
 <p>&nbsp;</p>
 =======================================================
@@ -152,7 +156,7 @@ Now let's look at our options and assign it to our meterpreter session:
 ![](/images/optimum/12. options.png)
 ![](/images/optimum/13. run.png)
 
-So out of 30 exploit checks we only have two possible results, that is because this module works best against 32-bit machines and not 64-bit machines: ms16_032 or bypassuac_eventvwr
+So out of 30 exploit checks we only have two possible results, that is because this module works best against 32-bit machines and not 64-bit machines. Our two options are: ms16_032 or bypassuac_eventvwr
 
 Let's search to see if we can find MS16-032 in metasploit:
 
@@ -211,9 +215,9 @@ Note, the first time you run it, you may need to kill the session and then set l
 ![](/images/optimum/20. run_1.png)
 ![](/images/optimum/20. run_2.png)
 
-For some reason no matter how many times I try it like this, the session will not connect despite the exploit appearing to work (Holy handle leak Batman, we have a SYSTEM shell!!).
+For some reason, no matter how many times we try the exploit with these options, the session will not connect despite the exploit appearing to work (Holy handle leak Batman, we have a SYSTEM shell!!).
 
-To me this means there may be something wrong with our payload so let's see if we can choose something else for our payload:
+This indicates there may be something wrong with our payload so let's see if we can choose something else for our payload:
 
     show payloads
 
@@ -273,7 +277,7 @@ Next, gedit the script and let's see what we have:
 
 ![](/images/optimum/27. edit.png)
 
-So we need to run a webserver with the nc.exe file in the same directory. On Kali, we have a few pre-compiled. I chose: /usr/share/windows-resources/binaries/nc.exe. We copy this file into our local directory:
+So we need to run a webserver with the nc.exe file in the same directory, and there is also a note stating we may need to run the script multiple times in order to achieve success. On Kali, we have a few pre-compiled nc.exe files. I chose: /usr/share/windows-resources/binaries/nc.exe. We copy this file into our local directory:
 
     cp /usr/share/windows-resources/binaries/nc.exe nc.exe
 
@@ -321,7 +325,7 @@ Next we can run the script against optimum.systeminfo:
 
     ./windows-exploit-suggester.py -i optimum.systeminfo -d 2020-05-07-mssb.xls
 
-If you look at the options, you may be tempted to use -l for local exploits only. Do not do so as you may miss out on some potential exploits to use (in this case, the one we are going to use will not show up if you use -l)
+If you look at the options for windows-exploit-suggester.py, you may be tempted to use -l for local exploits only. Do not do so as you may miss out on some potential exploits to use (in this case, the one we are going to use will not show up if you use -l)
 
 ![](/images/optimum/33. wes.png)
 ![](/images/optimum/33. wes_2.png)
@@ -372,8 +376,6 @@ Success! Let's go get our flags:
 
 And there we have our flags.
 
-
-
 <p>&nbsp;</p>
 =======================================================
 
@@ -381,13 +383,9 @@ And there we have our flags.
 
 =======================================================
 
-(file-name.py/.sh)
+39161.py: [https://github.com/rax-register/code_examples/blob/master/39161.py](https://github.com/rax-register/code_examples/blob/master/39161.py)
 
-    insert code here
-    # code blocks ignore the rest of markdown formatting
-    # so you can leave # characters to denote comments
-    # without setting new headings
-        
+41020.exe: [https://github.com/rax-register/code_examples/blob/master/41020.exe](https://github.com/rax-register/code_examples/blob/master/41020.exe)
 
 <p>&nbsp;</p>
 =======================================================
@@ -396,11 +394,14 @@ And there we have our flags.
 
 =======================================================
 
-1. Link: []()
-2. Link: []()
-3. Link: []()
-4. Link: []()
-5. Link: []()
+1. CVE entry for HFS: [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6287](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6287)
+2. Rapid7 msf module entry: [https://www.rapid7.com/db/modules/exploit/windows/http/rejetto_hfs_exec](https://www.rapid7.com/db/modules/exploit/windows/http/rejetto_hfs_exec)
+3. MS16-032 entry (privesc): [https://docs.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-032](https://docs.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-032)
+4. Exploit-db entry for exploit: [https://www.exploit-db.com/exploits/39161](https://www.exploit-db.com/exploits/39161)
+5. MS16-098 entry (privesc): [https://docs.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-098](https://docs.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-098)
+6. Exploit-db entry for privesc: [https://www.exploit-db.com/exploits/41020](https://www.exploit-db.com/exploits/41020)
+7. Pre-compiled privesc binary: [https://github.com/offensive-security/exploitdb-bin-sploits/raw/master/bin-sploits/41020.exe](https://github.com/offensive-security/exploitdb-bin-sploits/raw/master/bin-sploits/41020.exe)
+8. certutil manual: [https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certutil](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certutil)
 
 <p>&nbsp;</p>
 =======================================================
