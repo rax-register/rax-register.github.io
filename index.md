@@ -63,3 +63,6 @@ hello.sh:
 
 ### 8. HTB Grandpa : 2020-07-10
 [https://rax-register.github.io/2020/07/10/htb-grandpa.html](https://rax-register.github.io/2020/07/10/htb-grandpa.html)
+
+### 9. HTB Optimum : 2020-07-11
+[https://rax-register.github.io/2020/07/11/htb-optimum.html](https://rax-register.github.io/2020/07/11/htb-optimum.html)
