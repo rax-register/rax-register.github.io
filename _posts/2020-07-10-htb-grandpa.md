@@ -10,6 +10,7 @@ Contents:
 {:toc}
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Introduction
@@ -19,6 +20,7 @@ Contents:
 Broad introduction to the machine.
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Tools & Techniques Used
@@ -42,6 +44,7 @@ We spend some time in the meterpreter session on Grandpa and work through a mino
 -7- 
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Scanning and Enumeration
@@ -84,6 +87,7 @@ Rapid7 is a metasploit module so let's start there.
 
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Exploitation using Metasploit
@@ -203,6 +207,7 @@ And there are our flags:
 
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Manual Exploitation
@@ -356,6 +361,7 @@ And there are our flags.
 
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Final Code
@@ -371,6 +377,7 @@ And there are our flags.
         
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ## Links & Additional Reading
@@ -384,6 +391,7 @@ And there are our flags.
 5. Link: []()
 
 <p>&nbsp;</p>
+
 =======================================================
 
 ![rax logo](/images/rax_intel.png)
