@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Broad introduction to the machine.
+Netmon is an early 2019 Windows machine on the Hack the Box platform, rated easy as the . It provides a simple attack surface with a piece of vulnerable software to create a few steps during our scanning and enumeration phase.
 
 <p>&nbsp;</p>
 =======================================================
@@ -25,21 +25,19 @@ Broad introduction to the machine.
 
 =======================================================
 
-Summary paragraph. We will not use Metasploit for Netmon, but there are two different techniques to show for manual exploitation.
+Netmon provides a common Windows attack surface with a few well-known ports open. We will not use Metasploit for this one. Instead we discover a web application vulnerable to a remote authenticated command injection that requires us to first find valid credentials. After retrieving credentials, we execute two different methods to exploit the application: one via a python script which creates a new user account in the machine's Administrators group, and the other a manual reverse shell using powershell. The vulnerable application runs as NT/Authority System so in both cases we obtain system level privileges with our initial shell.
 
 -1- nmap
 
 -2- ftp
 
--3- Web Browser Developer Tools (or Burp Suite) for cookie extraction
+-3- firefox browser developer tools for cookie extraction (can also use burp suite's intercept proxy)
 
--4- Bash script for exploit (46257.sh)
+-4- bash script for exploit (46257.sh)
 
--5- 
+-5- psexec.py
 
--6- 
-
--7- 
+-6- powershell
 
 <p>&nbsp;</p>
 =======================================================
@@ -48,7 +46,9 @@ Summary paragraph. We will not use Metasploit for Netmon, but there are two diff
 
 =======================================================
 
-nmap -A -T4 10.10.10.152
+A simple nmap scan to start will suffice here:
+
+    nmap -A -T4 10.10.10.152
 
 ![](/images/netmon/2. nmap.png)
 ![](/images/netmon/2. nmap_2.png)
@@ -89,7 +89,7 @@ Let's see what else this exploit requires:
 
 ![](/images/netmon/8. exploitdb.png)
 
-So once we have valid creds, we need to log in to the application and grab our session cookie, then provide the cookie to the script for exploit. After the script runs successfully, we will have a new user ‘pentest’ in the administrators group with the password ‘P3nT3st!’
+So once we have valid creds, we need to log in to the application and grab our session cookie, then provide the cookie to the script for exploit. After the script runs successfully, we will have a new user ‘pentest’ in the Administrators group with the password ‘P3nT3st!’
 
 Download the script and save it to your current directory.
 
@@ -148,31 +148,31 @@ And bingo, we have some PRTG Configuration files. Since the PRTG Configuration.d
 
 ![](/images/netmon/15. ftp_get.png)
 
-Okay, for now on our ftp session we are done, so exit:
+After successfully retrieving the files, we are finished with ftp, so exit the session:
 
     bye
 
 ![](/images/netmon/16. bye.png)
 
-So we have thte two PRTG files. Let's do some basic grep and searching for “admin”:
+Now we have the two PRTG files. Let's do some basic grep and searching for terms that may find a username, such as “admin”:
 
     cat "PRTG Configuration.dat" | grep admin
 
 ![](/images/netmon/17. cat.png)
 
-And we see “prtgadmin” which if you recall is the default admin username. So let's switch our grep term a bit:
+And we see “prtgadmin”, which if you recall is the default admin username. We continue with a simple edit to our grep term:
 
     cat "PRTG Configuration.dat" | grep -n12 prtgadmin
 
 ![](/images/netmon/17. cat_2.png)
 
-So here we have what looks like the password field but it is “encrypted”.  Let's try the older file:
+Here we have what looks like the password field but it is “encrypted”. We also have the older file, so let's try it:
 
     cat "PRTG Configuration.old.bak" | grep -n12 prtgadmin
 
 ![](/images/netmon/17. cat_3.png)
 
-We receive more output, and in the top of that output we see as a possible password: PrTg@dmin2018 for user prtgadmin.  Let's go try it out!
+We receive more output, and in the top of that output we see as a possible password: PrTg@dmin2018 for user prtgadmin. Let's go try it out!
 
 <p>&nbsp;</p>
 =======================================================
@@ -194,11 +194,11 @@ Back on the http://10.10.10.152 page, we can try to log in with prtgadmin : PrTg
 
 ![](/images/netmon/18. prtg.png)
 
-Well that did not work. But remember, the file you pulled this password from was dated 2018. And the password ended in 2018, so why not try changing the password to the year Netmon was released (2019). prtgadmin : PrTg@dmin2019
+Well that did not work. But remember, the file we pulled this password from was dated 2018. And the password ended in '2018', so why not try changing the password to the year Netmon was released (2019). prtgadmin : PrTg@dmin2019
 
 ![](/images/netmon/19. welcome.png)
 
-And we have access! Now we need to find our session cookie, so either fire up Burp Suite and use the intercept (proxy) or go to Firefox's developer tools:
+And we have access! Now we need to find our session cookie, so either fire up Burp Suite and use the Intercept (proxy) or go to Firefox's developer tools:
 
 ![](/images/netmon/20. dev_tools.png)
 
@@ -218,7 +218,7 @@ This particular exploit script has a decent usage screen. So it looks like our a
 (snipped)
 ![](/images/netmon/22. 46257_exploit_2.png)
 
-Looks like it worked!  Now let's try to log back in via impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
+Looks like it worked! Now can use impacket's psexec.py to log in: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
     
     git clone https://github.com/SecureAuthCorp/impacket.git
     
@@ -235,6 +235,8 @@ After the install you should be able to run psexec.py
 So our command to exploit should be something like:
 
     psexec.py pentest:'P3nT3st!'@10.10.10.152 
+
+    whoami
 
 ![](/images/netmon/23. psexec_2.png)
 
@@ -331,7 +333,7 @@ Success!  We are system.
 2. Exploit-db entry: [https://www.exploit-db.com/exploits/46527](https://www.exploit-db.com/exploits/46527)
 3. PRTG online manual: [https://www.paessler.com/manuals/prtg/data_storage](https://www.paessler.com/manuals/prtg/data_storage)
 4. Impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
-5. PayloadAlltheThings Reverse Shells: [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell)
+5. PayloadAlltheThings Powershell Reverse Shells: [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell)
 
 <p>&nbsp;</p>
 =======================================================
