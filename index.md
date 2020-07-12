@@ -66,3 +66,6 @@ hello.sh:
 
 ### 9. HTB Optimum : 2020-07-11
 [https://rax-register.github.io/2020/07/11/htb-optimum.html](https://rax-register.github.io/2020/07/11/htb-optimum.html)
+
+### 10. HTB Netmon : 2020-07-11
+[https://rax-register.github.io/2020/07/11/htb-netmon.html](https://rax-register.github.io/2020/07/11/htb-netmon.html)
