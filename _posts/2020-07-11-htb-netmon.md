@@ -257,9 +257,7 @@ And there we have our flags.
 
 =======================================================
 
-And alternate way is to directly obtain a system level shell using a powershell one-liner reverse shell:
-
-https://davidhamann.de/2020/01/22/htb-writeup-netmon/
+An alternate way is to directly obtain a system level shell by abusing the PRTG admin web page's notifications using a powershell one-liner reverse shell: 
 
 Log in to the PRTG admin web page, click the dropdown menu on the left (three horizontal bars) then click Setup:
 
@@ -292,10 +290,12 @@ Prep your one-line powershell reverse shell command like this:
 ![](/images/netmon/30. execute_2.png)
 
 Change the “Program File” setting to read “Demo exe notification - outfile.ps1”
+
 Paste your one-line powershell reverse shell into the “Parameter” box
+
 Click Save
 
-→ Start a nc listener on Kali, in the above example I am triggering the callback to port 4444, so we need to listen on that port:
+Start a nc listener on Kali, in the above example I am triggering the callback to port 4444, so we need to listen on that port:
 
     nc -lvnp 4444
 
@@ -318,12 +318,7 @@ Success!  We are system.
 
 =======================================================
 
-(file-name.py/.sh)
-
-    insert code here
-    # code blocks ignore the rest of markdown formatting
-    # so you can leave # characters to denote comments
-    # without setting new headings
+46257.sh: https://github.com/rax-register/code_examples/blob/master/46257.sh
 
 <p>&nbsp;</p>
 =======================================================
@@ -335,9 +330,8 @@ Success!  We are system.
 1. MITRE CVE entry: [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-9276](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-9276)
 2. Exploit-db entry: [https://www.exploit-db.com/exploits/46527](https://www.exploit-db.com/exploits/46527)
 3. PRTG online manual: [https://www.paessler.com/manuals/prtg/data_storage](https://www.paessler.com/manuals/prtg/data_storage)
-4. Link: []()
-5. Impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
-6. PayloadAlltheThings Reverse Shells: [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell)
+4. Impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
+5. PayloadAlltheThings Reverse Shells: [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell)
 
 <p>&nbsp;</p>
 =======================================================
