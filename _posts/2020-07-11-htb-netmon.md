@@ -29,11 +29,11 @@ Summary paragraph. We will not use Metasploit for Netmon, but there are two diff
 
 -1- nmap
 
--2- 
+-2- ftp
 
--3- 
+-3- Web Browser Developer Tools (or Burp Suite) for cookie extraction
 
--4- 
+-4- Bash script for exploit (46257.sh)
 
 -5- 
 
@@ -120,7 +120,7 @@ For ftp, using “ls -la” is your friend because it will display hidden files 
 
 ![](/images/netmon/12. ftp.png)
 
-→ So here we are in the root directory still, but with “ls -la” we get more files and folders to look through.  And there is a “ProgramData” folder which looks like a start on the directory structure we are looking for:
+We are still in the root directory, but with “ls -la” we get more files and folders to look through.  And there is a “ProgramData” folder which looks like a start on the directory structure we are looking for:
 
     ls  ProgramData
 
@@ -194,7 +194,7 @@ Back on the http://10.10.10.152 page, we can try to log in with prtgadmin : PrTg
 
 ![](/images/netmon/18. prtg.png)
 
-Well that did not work. But remember, the file you pulled this password from was dated 2018. And the password ended in 2018, so why not try changing the password to 2019: prtgadmin : PrTg@dmin2019
+Well that did not work. But remember, the file you pulled this password from was dated 2018. And the password ended in 2018, so why not try changing the password to the year Netmon was released (2019). prtgadmin : PrTg@dmin2019
 
 ![](/images/netmon/19. welcome.png)
 
@@ -210,14 +210,12 @@ Now let's run our bash script!
 
 ![](/images/netmon/21. 46257.png)
 
-That's one heck of a usage screen!  So it looks like our actual command should be:
+This particular exploit script has a decent usage screen. So it looks like our actual command should be:
 
     ./46257.sh -u http://10.10.10.152 -c "OCTOPUS1813713946=e0JGRDM2OEMwLTQ0MzAtNDBGRS05NTcwLTNCMTk5ODZBQzk3NH0"
 
 ![](/images/netmon/22. 46257_exploit.png)
-
 (snipped)
-
 ![](/images/netmon/22. 46257_exploit_2.png)
 
 Looks like it worked!  Now let's try to log back in via impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
@@ -334,11 +332,12 @@ Success!  We are system.
 
 =======================================================
 
-1. Exploit-db entry: [https://www.exploit-db.com/exploits/46527](https://www.exploit-db.com/exploits/46527)
-2. PRTG online manual: [https://www.paessler.com/manuals/prtg/data_storage](https://www.paessler.com/manuals/prtg/data_storage)
-3. Link: []()
-4. Impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
-5. PayloadAlltheThings Reverse Shells: [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell)
+1. MITRE CVE entry: [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-9276](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-9276)
+2. Exploit-db entry: [https://www.exploit-db.com/exploits/46527](https://www.exploit-db.com/exploits/46527)
+3. PRTG online manual: [https://www.paessler.com/manuals/prtg/data_storage](https://www.paessler.com/manuals/prtg/data_storage)
+4. Link: []()
+5. Impacket's psexec.py: [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
+6. PayloadAlltheThings Reverse Shells: [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#powershell)
 
 <p>&nbsp;</p>
 =======================================================
