@@ -67,32 +67,26 @@ Let's go look at the web page:
 
 ![](/images/netmon/3. website.png)
 
-
 A web login form.  Let's see if there are default creds:  Google “PRTG Network Monitor default credentials”
 
 ![](/images/netmon/4. google.png)
-
 
 Let's try “prtgadmin” for both the username and password:
 
 ![](/images/netmon/5. default.png)
 
-
 No joy.  Now let's Google for an exploit against PRTG Network Monitor:
 
 ![](/images/netmon/6. google.png)
-
 
 https://www.exploit-db.com/exploits/46527
 
 ![](/images/netmon/7. exploitdb.png)
 
-
 Okay so we have an exploit db entry for version 18.2.38. Our nmap showed version 18.2.37 running, so that is close enough for use to keep following up on this one. However, the title notes that it is “Authenticated”, meaning we must have valid username:password combination and we don't have it at the moment.
 Let's see what else this exploit requires:
 
 ![](/images/netmon/8. exploitdb.png)
-
 
 So once we have valid creds, we need to log in to the application and grab our session cookie, then provide the cookie to the script for exploit.  After the script runs successfully, we will have a new user ‘pentest’ in the administrators group with the password ‘P3nT3st!’
 Download the script and save it to your current directory.
@@ -104,18 +98,15 @@ But where to find creds?  Well, we had ftp open so let's start there:
 
 ![](/images/netmon/9. ftp.png)
 
-
 I also ran the “pwd” and “dir” commands to see where we are.  Now that we have access to the file structure, we need to figure out where PRTG Network Monitor stores its data and/or config files. We might be able to search through them for valid username:password pairs.
 
 Let's check Google again to see if we can find where some useful files might be stored:
 
 ![](/images/netmon/10. google.png)
 
-
 https://www.paessler.com/manuals/prtg/data_storage
 
 ![](/images/netmon/11. paessler.png)
-
 
 Since nmap had an O/S guess of Windows Server 2008/2012, let's see if we can find the top file path for our PRTG data.
 For ftp, using “ls -la” is your friend because it will display hidden files and folders:
@@ -123,12 +114,10 @@ For ftp, using “ls -la” is your friend because it will display hidden files 
 
 ![](/images/netmon/12. ftp.png)
 
-
 → So here we are in the root directory still, but with “ls -la” we get more files and folders to look through.  And there is a “ProgramData” folder which looks like a start on the directory structure we are looking for:
     ls  ProgramData
 
 ![](/images/netmon/13. ftp_ls.png)
-
 
 And we see a Paessler folder like we were expecting. So far this is looking good.  Keep going:
     cd ProgramData/Paessler
@@ -136,13 +125,11 @@ And we see a Paessler folder like we were expecting. So far this is looking good
 
 ![](/images/netmon/14. ftp_enum.png)
 
-
     cd “PRTG Network Monitor”
 
     ls -la
 
 ![](/images/netmon/14. ftp_enum_2.png)
-
 
 → And bingo, we have some PRTG Configuration files.  Since the PRTG Configuration.dat and .old files have the same file size and date/time stamp, let's just grab the current one. But there is also a “.old.bak” with a timestamp from several months before so let's grab that one too:
     get “PRTG Configuration.dat”
@@ -150,30 +137,25 @@ And we see a Paessler folder like we were expecting. So far this is looking good
 
 ![](/images/netmon/15. ftp_get.png)
 
-
 Okay, for now on our ftp session we are done, so exit:
     bye
 
 ![](/images/netmon/16. bye.png)
-
 
 So we have thte two PRTG files. Let's do some basic grep and searching for “admin”:
     cat "PRTG Configuration.dat" | grep admin
 
 ![](/images/netmon/17. cat.png)
 
-
 And we see “prtgadmin” which if you recall is the default admin username. So let's switch our grep term a bit:
     cat "PRTG Configuration.dat" | grep -n12 prtgadmin
 
 ![](/images/netmon/17. cat_2.png)
 
-
 So here we have what looks like the password field but it is “encrypted”.  Let's try the older file:
     cat "PRTG Configuration.old.bak" | grep -n12 prtgadmin
 
 ![](/images/netmon/17. cat_3.png)
-
 
 We receive more output, and in the top of that output we see as a possible password: PrTg@dmin2018 for user prtgadmin.  Let's go try it out!
 
@@ -200,17 +182,14 @@ So back on the http://10.10.10.152 page, we can try to log in with prtgadmin:PrT
 
 ![](/images/netmon/18. prtg.png)
 
-
 Well that didn't work. But remember, the file you pulled this password from was dated 2018. And the password ended in 2018, so why don't we try changing the password to 2019:
     prtgadmin:PrTg@dmin2019
 
 ![](/images/netmon/19. welcome.png)
 
-
 And we have access!  Now we need to find our session cookie, so either fire up Burp Suite and use the intercept (proxy) or go to Firefox's developer tools:
 
 ![](/images/netmon/20. dev_tools.png)
-
 
 And here we have our session cookie to plug in to the script!:
     OCTOPUS1813713946=e0JGRDM2OEMwLTQ0MzAtNDBGRS05NTcwLTNCMTk5ODZBQzk3NH0
@@ -219,7 +198,6 @@ Now let's run our bash script!
     ./46257.sh
 
 ![](/images/netmon/21. 46257.png)
-
 
 That's one heck of a usage screen!  So it looks like our actual command should be:
     ./46257.sh -u http://10.10.10.152 -c "OCTOPUS1813713946=e0JGRDM2OEMwLTQ0MzAtNDBGRS05NTcwLTNCMTk5ODZBQzk3NH0"
@@ -242,18 +220,15 @@ After the install you should be able to run psexec.py
 
 ![](/images/netmon/23. psexec.png)
 
-
 So our command to exploit should be something like:
     psexec.py pentest:'P3nT3st!'@10.10.10.152 
 
 ![](/images/netmon/23. psexec_2.png)
 
-
 Success! We are system. Let's go get our flags:
     type C:\Users\Public\user.txt
 
 ![](/images/netmon/24. user.png)
-
 
     type C:\Users\Administrator\Desktop\root.txt
 
@@ -277,28 +252,21 @@ Log in to the PRTG admin web page, click the dropdown menu on the left (three ho
 
 ![](/images/netmon/26. setup.png)
 
-
 On the screen that comes up next, click “Notifications”:
 
 ![](/images/netmon/27. notifications.png)
-
 
 On the far right, click “Add New Notification”
 
 ![](/images/netmon/28. add.png)
 
-
 Give your Notification an easy-to-remember name then scroll down until you see “Execute Program”:
 
 ![](/images/netmon/29. notification.png)
 
-
-
 Netmon (Windows) PRTG authenticated exploit, psexec.py privesc, alt privesc powershell one-line
 
 ![](/images/netmon/30. execute.png)
-
-r
 
 Click Execute Program
 
@@ -309,36 +277,25 @@ Prep your one-line powershell reverse shell command like this:
 
 ![](/images/netmon/30. execute_2.png)
 
-
-
 Change the “Program File” setting to read “Demo exe notification - outfile.ps1”
 Paste your one-line powershell reverse shell into the “Parameter” box
 Click Save
 
 → Start a nc listener on Kali, in the above example I am triggering the callback to port 4444, so we need to listen on that port:
+
     nc -lvnp 4444
-
-
 
 Now, trigger the Notification on the PRTG monitor page:
 
 ![](/images/netmon/31. trigger.png)
 
-
-
 To trigger the notification, click the Notepad/Edit box at the end of your notification's row. Then click the Bell icon to trigger.  In about 5-15 seconds in your Kali nc listener window you should see:
 
 ![](/images/netmon/32. nc_connection.png)
 
-
-
-If it doesn't give you the prompt upon displaying the “connect to [x.x.x.x]” line, just hit <Enter> one time.
+If it does not give you the prompt upon displaying the “connect to [x.x.x.x]” line, just hit <Enter> one time.
 
 Success!  We are system.
-
-
-
-
 
 <p>&nbsp;</p>
 =======================================================
@@ -369,16 +326,6 @@ Success!  We are system.
 5. Link: []()
 
 <p>&nbsp;</p>
-=======================================================
-
-## Basic formatting
-
-=======================================================
-
-You can use *italics*, **bold**, `code font text`, and create [links](https://www.markdownguide.org/cheat-sheet/). Here's a footnote [^1]. Here's a horizontal rule:
-
-<p>&nbsp;</p>
-
 =======================================================
 
 ![rax logo](/images/rax_intel.png)
