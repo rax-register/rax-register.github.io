@@ -16,7 +16,7 @@ Contents:
 
 =======================================================
 
-Netmon is an early 2019 Windows machine on the Hack the Box platform, rated easy as the . It provides a simple attack surface with a piece of vulnerable software to create a few steps during our scanning and enumeration phase.
+Netmon is an early 2019 Windows machine on the Hack the Box platform, rated easy. It provides a simple attack surface with a piece of vulnerable software to create a few steps during our scanning and enumeration phase.
 
 <p>&nbsp;</p>
 =======================================================
@@ -55,7 +55,7 @@ A simple nmap scan to start will suffice here:
 
 A few ports open:
 
-21 ftp -> looks to be allowing anonymous access on the C:\ drive.  Possible a good thing for us!
+21 ftp -> looks to be allowing anonymous access on the C:\ drive.  Possibly a good thing for us!
 
 80 http -> PRTG Network Monitor, 18.1.37.13946
 
