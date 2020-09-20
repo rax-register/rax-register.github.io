@@ -78,7 +78,7 @@ ping -c 1 67.205.146.156
 Attempt to browse to see if there is anything on port 80:
 
 http://67.205.146.156
-![](/images/boykin_lab/1. apache2.png)
+![](/images/boykin_lab/1.apache2.png)
 
 https://67.205.146.156
 ![](/images/boykin_lab/2. https.png)
