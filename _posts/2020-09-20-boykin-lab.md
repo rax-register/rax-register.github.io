@@ -514,7 +514,7 @@ And we have made it to Target machine 2.  Right away from the login screen we ca
 
 ![](/images/boykin_lab/53. ssh_fail.png)
 
-And here we forgot to chmod the id_rsa file to a more secure permissions setting prior to trying to use it.  ssh detects the file is not secured and will not allow its use.
+And here I forgot to chmod the id_rsa file to a more secure permissions setting prior to trying to use it.  ssh detects the file is not secured and will not allow its use.
 
     chmod 600 id_rsa
     ssh -i id_rsa capt@157.245.141.85
@@ -568,7 +568,7 @@ Since we know there is some sort of traffic coming to this machine on port 3333,
 
 ![](/images/boykin_lab/62. tcpdump.png)
 
-tcpdump is an easy, command line packet capture tool the is essential in your toolkit.  Many times on labs or ctfs, we only have command line access to a machine which means even though we can launch graphical user interface based packet capture utilities like wireshark, we do not have remote desktop access to use them through the graphical interface.  In these cases, knowing some basics of tcpdump can save the day.  A quick tutorial on tcpdump can be found here:  https://www.linuxtechi.com/capture-analyze-packets-tcpdump-command-linux/
+tcpdump is a command line packet capture tool that is essential in your toolkit.  Many times on labs or ctfs, we only have command line access to a machine which means even though we can launch graphical user interface based packet capture utilities like wireshark, we do not have remote desktop access to use them through the graphical interface.  In these cases, knowing some basics of tcpdump can save the day.  A quick tutorial on tcpdump can be found here:  [https://www.linuxtechi.com/capture-analyze-packets-tcpdump-command-linux/](https://www.linuxtechi.com/capture-analyze-packets-tcpdump-command-linux/)
 
 We should be able to capture just the traffic we want using a command like:
 
@@ -576,10 +576,13 @@ We should be able to capture just the traffic we want using a command like:
 
 ![](/images/boykin_lab/62. tcpdump_2.png)
 
-    -A means to capture packets in ASCII/human readable format
-    -vv is for extra verbosity
-    -i eth1 is capturing only on interface eth1, which is the internal network based on our earlier ifconfig command
-    port 3333 captures only port 3333 traffic
+-A means to capture packets in ASCII/human readable format
+
+-vv is for extra verbosity
+
+-i eth1 is capturing only on interface eth1, which is the internal network based on our earlier ifconfig command
+
+port 3333 captures only port 3333 traffic
 
 Let the above command run for a minute or so then Ctrl+c it to stop the capture.
 
@@ -641,14 +644,14 @@ The command may appear to hang in this terminal window, but over in our nc liste
 
 ![](/images/boykin_lab/69. root.png)
 
-We have root on Target machine 3!  Let's grab some flags.
-
 <p>&nbsp;</p>
 =======================================================
 
 ## Target Machine 3
 
 =======================================================
+
+We have root on Target machine 3!  Let's grab some flags.
 
     ls /home
     cat /home/capt/flag.txt
