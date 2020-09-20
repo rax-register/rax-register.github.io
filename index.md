@@ -43,6 +43,9 @@ hello.sh:
 ### More recent posts are at the top of the list, older ones are at the bottom.
 <p>&nbsp;</p>
 
+### 11. CaptBoykin Lab : 2020-09-20
+[https://rax-register.github.io/2020/09/20/boykin-lab.html](https://rax-register.github.io/2020/09/20/boykin-lab.html)
+
 ### 10. HTB Netmon : 2020-07-11
 [https://rax-register.github.io/2020/07/11/htb-netmon.html](https://rax-register.github.io/2020/07/11/htb-netmon.html)
 
