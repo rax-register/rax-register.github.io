@@ -437,9 +437,9 @@ Also, we can grab the /etc/shadow file:
     cat /etc/shadow
 
 ![](/images/boykin_lab/42. shadow.png)
-<trimmed>
+trimmed
 ![](/images/boykin_lab/42. shadow_2.png)
-<trimmed>
+trimmed
 ![](/images/boykin_lab/42. shadow_3.png)
 
 So, just in case we want to take a shot at cracking these later, we have three usernames and password hashes.  Continuing with enumeration:
@@ -557,7 +557,7 @@ Here we see the Salt minion and master ports (4505 and 4506) as expected. We als
     salt -h
 
 ![](/images/boykin_lab/61. salt.png)
-<trimmed>
+trimmed
 
 We should be able to find each host acting as a minion with a command like the following:
 
@@ -594,7 +594,7 @@ Now we can examine the tcpdump.out:
     cat tcpdump.out
 
 ![](/images/boykin_lab/63. cat.png)
-<trimmed>
+trimmed
 ![](/images/boykin_lab/63. cat_2.png)
 
 And here we see another set of credentials:    root  :  -XXXXXXXXXXXXXXXXV           
@@ -734,7 +734,7 @@ Next, let's take a look at some network related information to see our interface
     ipconfig /all
 
 ![](/images/boykin_lab2/79. ipconfig.png)
-<trimmed>
+trimmed
 ![](/images/boykin_lab2/79. ipconfig_2.png)
 
     curl ipinfo.io
