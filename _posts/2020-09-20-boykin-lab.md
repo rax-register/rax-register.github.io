@@ -1,4 +1,4 @@
-# Boykin Lab
+# CaptBoykin Lab
 
 Contents:
 
