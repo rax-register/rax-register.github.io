@@ -11,7 +11,7 @@ Contents:
 
 =======================================================
 
-The Boykin lab is something I lucked into thanks to VetSec Slack, where I met the designer and maintainer of the lab, CaptBoykin. It is intended as a basic-level challenge, featuring four separate machines, each with flags for the attacker to capture.  Two pieces of information are provided at the start:  An initial public IP address and a hint that the final flag involves taking a capture of a webcam aimed at the flag.  Everything between those two is up to you, and there are multiple paths to and through most of the machines.
+The CaptBoykin lab is something I lucked into thanks to VetSec Slack, where I met the designer and maintainer of the lab, CaptBoykin. It is intended as a basic-level challenge, featuring four separate machines, each with flags for the attacker to capture.  Two pieces of information are provided at the start:  An initial public IP address and a hint that the final flag involves taking a capture of a webcam aimed at the flag.  Everything between those two is up to you, and there are multiple paths to and through most of the machines.
 <p>&nbsp;</p>
 =======================================================
 
@@ -55,7 +55,7 @@ The following tools or techniques are active concepts used in the lab, above and
 
 -17- curl
 
--18- msfconsole and multi handler
+-18- msfconsole and exploit/multi handler
 
 -19- meterpreter and webcam commands
 <p>&nbsp;</p>
@@ -133,7 +133,7 @@ Right-click, “View Page Source”:
 
 ![](/images/boykin_lab/11. view-source.png)
 
-and further down in the source code:
+And further down in the source code:
 
 ![](/images/boykin_lab/11. view-source2.png)
 
@@ -172,6 +172,7 @@ Here we have two files:
 And we have two additional sets of credentials:
 
 guacadmin  :  0eXXXXXXXXXXXXXXXXXXXXXXXXXb7
+
 guacadmin  :  gXXXXXXXXXXXXXXXXX$
 
 We can also run an nmap scan against all ports to see if there is anything else:
@@ -180,7 +181,7 @@ We can also run an nmap scan against all ports to see if there is anything else:
 
 ![](/images/boykin_lab/14. nmap_full.png)
 
-Visiting http://67.205.146.156:8080/:
+    http://67.205.146.156:8080/:
 
 ![](/images/boykin_lab/15. http.png)
 
@@ -231,7 +232,7 @@ We have a flag.txt but it is owned by root and the group escape which means user
 
 ![](/images/boykin_lab/20. ls_2.png)
 
-Here it looks like our rbash is restricting us to the commands listed in this directory.  Luckily we have perl, which we should be able to use to spawn a regular bash shell.  A quick article on this concept can be found here: [https://www.metahackers.pro/breakout-of-restricted-shell/](https://www.metahackers.pro/breakout-of-restricted-shell/)
+Here it looks like rbash is restricting us to the commands listed in this directory.  Luckily we have perl, which we should be able to use to spawn a regular bash shell.  A quick article on this concept can be found here: [https://www.metahackers.pro/breakout-of-restricted-shell/](https://www.metahackers.pro/breakout-of-restricted-shell/)
 
     perl -e 'exec "/bin/bash";'
 
