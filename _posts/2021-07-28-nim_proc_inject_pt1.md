@@ -1028,7 +1028,7 @@ As noted earlier, the code produced here contains several plaintext artifacts th
 
 I ran into several errors along the way while initially working through this project.  Below are the main ones I encountered, all of which should be avoided if you followed the walkthrough, but I believe documenting 'what did not work' can be just as important as what did work.  This list is by no means exhaustive so if you run into other errors along the way, Google is your best friend.
 
-### Compile-time Errors and Troubleshooting:
+#### Compile-time Errors and Troubleshooting:
 
 -1-  Errors related to gcc not being found.
 
@@ -1048,7 +1048,7 @@ Solution:  The psapi.h header file is not getting linked properly in your compil
 
 [https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10](https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10)
 
-### Run-time Errors and Troubleshooting:
+#### Run-time Errors and Troubleshooting:
 
 -1-  "The code execution cannot proceed because <dll-name.dll> was not found."
 
