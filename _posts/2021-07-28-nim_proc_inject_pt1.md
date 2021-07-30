@@ -804,12 +804,18 @@ Instead, for libwinpthread-1.dll we need to add --passl="-static -lpthread".  So
 
 ![](/images/nim_proc_inject_pt1/52. compile11.png)
 
-Again, our av_bypass.exe compiles successfully, with a larger file size.  Transfer the file to your Victim Machine and execute it.  You may see a quick pop-up but otherwise, nothing seems to happen.  Open a Task Manager window, and you can see a notepad.exe is running, but does not appear anywhere else on your screen.
+Again, our av_bypass.exe compiles successfully, with a larger file size.  
+
+\<\< Victim Machine \>\>
+    
+Transfer the file to your Victim Machine and execute it.  You may see a quick pop-up but otherwise, nothing seems to happen.  Open a Task Manager window, and you can see a notepad.exe is running, but does not appear anywhere else on your screen.
 
 ![](/images/nim_proc_inject_pt1/53. compile12.png)
 
 This means our program started the notepad.exe process in the background.  It also means our shellcode likely executed without major issue as the notepad.exe process is still running and did not crash.  Our next step would be to set up our Attacker Machine to receive the Meterpreter shell.  But first, a few additions to our compiler command to reduce the resulting file size.
 
+\<\< Development Machine \>\>
+    
 From the Offensive Nim Github repository and the Nim FAQ page [https://nim-lang.org/faq.html](https://nim-lang.org/faq.html) , we can use additional options to speed up the executable and reduce its size:
 
 -d:danger  :  From the Nim FAQ: "-d:danger makes the fastest binary possible while disabling all runtime safety checks including bound checks, overflow checks, nil checks and more."
