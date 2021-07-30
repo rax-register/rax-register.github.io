@@ -1030,7 +1030,9 @@ I ran into several errors along the way while initially working through this pro
 
     
 ========================================
+
 Compile-time Errors and Troubleshooting
+
 ========================================
 
 -1-  Errors related to gcc not being found.
@@ -1052,7 +1054,9 @@ Solution:  The psapi.h header file is not getting linked properly in your compil
 [https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10](https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10)
 
 ========================================
+
 Run-time Errors and Troubleshooting
+
 ========================================
     
 -1-  "The code execution cannot proceed because \<dll-name.dll\> was not found."
