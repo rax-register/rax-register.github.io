@@ -39,7 +39,7 @@ For this project I used a Windows 10 laptop to run two Virtual Machines as follo
 
 ![](/images/nim_proc_inject_pt1/1. lab_setup.png "Lab Setup")
 
-- Development Machine - 
+\<\< Development Machine \>\> 
 
 Windows 10 Home Version 21H1 (OS Build 19043.1110), fully updated with Windows Defender and MalwareBytes as antivirus options.  Windows Defender was turned on with the exception of "Automatic sample submission" throughout this project.
 
@@ -54,11 +54,11 @@ During the guide we will install the following additional software on the Develo
 -4- MingW compiler from the Nim website
     
 
- - Attacker Machine - 
+\<\< Attacker Machine \>\> 
 
 Kali Linux or Parrot OS.  Really anything that can run Metasploit as we will use msfvenom and msfconsole to make this part easier on ourselves.  For this project I used Kali Linux 2021, with root user access and Metasploit Framework 5.
 
- - Victim Machine - 
+\<\< Victim Machine \>\> 
 
 Windows 10 machine or VM with an unprivileged user account and Windows Defender enabled with all options turned on except automatic sample submission.  The specific VM I used is a Windows 10 Enterprise VM on an Active Directory Lab I built, Windows Version 21H1 OS Build 19043.1110.  During the walkthrough I used a local user (non-domain user) without administrative privileges. The .iso used to initially install and then update Windows was from the Microsoft Windows 10 Enterprise Evaluation Center:  [https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise)
 
@@ -72,16 +72,16 @@ I did not include instructions on VM/network setup in this guide so this is comp
 =======================================================
 
 
- - Attacker machine - 
+\<\< Attacker Machine \>\> 
 
 Default install of Kali Linux or Parrot OS is fine.  Again all we need is access to Metasploit Framework 5 so this guide does not cover baseline setup for the Attacker Machine.  Specific steps to configure Metasploit to receive our Meterpreter reverse TCP connection are covered in the Section 6: Execution.
 
- - Victim Machine - 
+\<\< Victim Machine \>\> 
 
 Nothing to do just yet.  Again, just ensure the Attacker and Victim Machines can ping each other.
 
 
- - Development Machine - 
+\<\< Development Machine \>\> 
 
 Install git:  [https://git-scm.com/download/win](https://git-scm.com/download/win)
 
@@ -491,7 +491,7 @@ You will see these functions appear in our Nim code below, but I will not discus
 
 First, we need some shellcode to inject and then execute.  To prepare our shellcode we will use our Attacker Machine to run an msfvenom command that will output the shellcode to a file.  We need to know the IP address of the Attacker Machine and an unused TCP port we will run our Metasploit listener on.  In my case these are 192.168.3.28 and 1701 respectively.  Your IP address will likely be different, and feel free to choose a different port number as long as it is not already in use.
 
- - Attacker Machine -  
+\<\< Attacker Machine \>\>  
 
 In a terminal window:
 
@@ -517,7 +517,7 @@ LPORT=1701  :  Set the TCP port to connect to as 1701.
 
 ![](/images/nim_proc_inject_pt1/37. msfvenom.png)
 
- - Development Machine - 
+\<\< Development Machine \>\> 
 
 We need to use two items from the output of the msfvenom command.  The first is the final Payload size, in my case 201391 bytes (yours may be different).  The second is the payload itself which is in the code.out file.  First let's update our code with some additional comments to document what we are doing.  This code should start immediately following the end of the C++ code section:
 
@@ -550,7 +550,7 @@ The shellcode itself will take a bit more to get into our code file.  As you can
 trimmed
 ![](/images/nim_proc_inject_pt1/39. shellcode2.png)
 
- - Attacker Machine - 
+\<\< Attacker Machine \>\> 
 
 We use a text editor to remove the first line:  "byte[] buf = new byte[201391] { "
 
@@ -579,7 +579,7 @@ tr  :  Truncate command.
 
 \> code_stripped.out  :  Place the output of this command into the file code_stripped.out.
 
- - Development Machine - 
+\<\< Development Machine \>\> 
     
 Now, you can drag and drop code_stripped.out over to your Development Machine, open it, and copy/paste the shellcode into av_bypass.nim.  I have trimmed the output here to fit in the code box.  Your actual code will be several thousand lines:
 
@@ -860,11 +860,11 @@ We are ready to move on.
 
 =======================================================
 
- - Development Machine - 
+\<\< Development Machine \>\> 
  
  First, we transfer the newest av_bypass.exe file over to our Victim Machine.  Use whatever method works for you.
 
- - Attacker Machine - 
+\<\< Attacker Machine \>\> 
 
 On our Attacker Machine we need to start and configure Metasploit to receive the Meterpreter reverse shell.  Depending on your setup, your prompts and the output may look different than what is shown in the following screenshots.
 
@@ -908,7 +908,7 @@ Here we have set the payload we expect to receive to the same as our msfvenom co
 With our Attacker Machine configured and listening for the connection, we can move back to the Victim Machine.
 
 
- - Victim Machine - 
+\<\< Victim Machine \>\> 
 
 Ensure windows defender is turned on.  In your Windows search bar, search for "Windows Security".
 
@@ -921,7 +921,7 @@ As shown above, I left Automatic sample submission off, just in case.  This is a
 When ready, double-click av_bypass.exe.  You may see a quick pop-up flash on the screen.  Check your Attacker Machine.
 
 
- - Attacker Machine - 
+\<\< Attacker Machine \>\> 
 
 You should see a Meterpreter connection message similar to the below, with the IP addresses and port for your setup.  If all went well you should also not receive warnings or threat detection messages from Windows Defender on the Victim Machine:
 
@@ -957,7 +957,7 @@ And here we have additional confirmation we are running on the intended machine,
 
 But, how stealthy is our connection?  The answer:  not very.  
 
- - Victim Machine -     
+\<\< Victim Machine \>\>     
     
 We can take a look at the Task Manager, specifically on the Details tab.  Here we can see the notepad.exe process running as PID 6744 (your PID will be different), even though it is not visible on our Windows Victim Machine:
 
@@ -985,7 +985,7 @@ Before we leave our Victim Machine, navigate to the folder with your av_bypass.e
 You should receive the above results showing 0 threats found.
 
     
- - Attacker Machine -     
+\<\< Attacker Machine \>\>     
 
 We can also take a quick look at our av_bypass.exe.  Move a copy of it to your Attacker Machine and execute a strings command:
 
