@@ -39,7 +39,7 @@ For this project I used a Windows 10 laptop to run two Virtual Machines as follo
 
 ![](/images/nim_proc_inject_pt1/1. lab_setup.png "Lab Setup")
 
-#### Development Machine 
+- Development Machine - 
 
 Windows 10 Home Version 21H1 (OS Build 19043.1110), fully updated with Windows Defender and MalwareBytes as antivirus options.  Windows Defender was turned on with the exception of "Automatic sample submission" throughout this project.
 
@@ -54,13 +54,13 @@ During the guide we will install the following additional software on the Develo
 -4- MingW compiler from the Nim website
     
 
-#### Attacker Machine
+ - Attacker Machine - 
 
 Kali Linux or Parrot OS.  Really anything that can run Metasploit as we will use msfvenom and msfconsole to make this part easier on ourselves.  For this project I used Kali Linux 2021, with root user access and Metasploit Framework 5.
 
-#### Victim Machine
+ - Victim Machine - 
 
-Windows 10 machine or VM with an unprivileged user account and Windows Defender enabled with all options turned on except automatic sample submission.  The specific VM I used is a Windows 10 Enterprise VM on an Active Directory Lab I built, Windows Version 21H1 OS Build 19043.1110.  During the walkthrough I used a local user (non-domain user) without administrative privileges. The .iso used to initially install and then update Windows was from the Microsoft Windows 10 Enterprise Evaluation Center:  https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise 
+Windows 10 machine or VM with an unprivileged user account and Windows Defender enabled with all options turned on except automatic sample submission.  The specific VM I used is a Windows 10 Enterprise VM on an Active Directory Lab I built, Windows Version 21H1 OS Build 19043.1110.  During the walkthrough I used a local user (non-domain user) without administrative privileges. The .iso used to initially install and then update Windows was from the Microsoft Windows 10 Enterprise Evaluation Center:  [https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise)
 
 I did not include instructions on VM/network setup in this guide so this is completely up to you.  Make sure the Attacker and Victim VMs are on the same network and can ping each other.
 
@@ -72,18 +72,18 @@ I did not include instructions on VM/network setup in this guide so this is comp
 =======================================================
 
 
-#### Attacker machine
+ - Attacker machine - 
 
 Default install of Kali Linux or Parrot OS is fine.  Again all we need is access to Metasploit Framework 5 so this guide does not cover baseline setup for the Attacker Machine.  Specific steps to configure Metasploit to receive our Meterpreter reverse TCP connection are covered in the Section 6: Execution.
 
-#### Victim Machine
+ - Victim Machine - 
 
 Nothing to do just yet.  Again, just ensure the Attacker and Victim Machines can ping each other.
 
 
-#### Development Machine
+ - Development Machine - 
 
-Install git:  https://git-scm.com/download/win
+Install git:  [https://git-scm.com/download/win](https://git-scm.com/download/win)
 
 ![](/images/nim_proc_inject_pt1/2. git_download.png "Git Download")
 
@@ -100,7 +100,7 @@ You can accept the defaults or customize it to your preference.  There are sever
 
 Once install is complete click Finish.
 
-Next, install Visual Studio Code: https://code.visualstudio.com/download
+Next, install Visual Studio Code: [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
 
 ![](/images/nim_proc_inject_pt1/5. vscode.png "VS Studio Code Website")
 
@@ -170,7 +170,7 @@ These two extensions provide a near-complete development setup for the Nim langu
 
 At this point we can close Visual Studio Code as it is time to install Nim.
 
-Browse to https://nim-lang.org/install_windows.html
+Browse to [https://nim-lang.org/install_windows.html](https://nim-lang.org/install_windows.html)
 
 ![](/images/nim_proc_inject_pt1/19. nim_download.png)
 
@@ -345,9 +345,11 @@ The Readme.md file from the Winim Github page describes it best: "Winim contains
 
 These two libraries allow us to use Nim code to leverage the Windows API functions we need for the process injection portion of our code.  Again, the import lines are ones I prefer to have at the top of my program as standard practice.
 
-From the Offensive Nim Github, we have a rough template to embed C++ code in our Nim program:  https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/clr_host_cpp_embed_bin.nim
+From the Offensive Nim Github, we have a rough template to embed C++ code in our Nim program:  [https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/clr_host_cpp_embed_bin.nim](https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/clr_host_cpp_embed_bin.nim)
 
-However, this example is for embedding C++ code to run assembly code.  Fortunately, there is https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/ .  Approximately 3/4 through that post is the following code, adapted from the https://www.ired.team post referenced in the comment on line #4:
+However, this example is for embedding C++ code to run assembly code.  Fortunately, there is [https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/](https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/)  
+
+Approximately 3/4 through that post is the following code, adapted from the [https://www.ired.team](https://www.ired.team) post referenced in the comment on line #4:
 
 
     ### begin av evasion (c++ code)
@@ -475,7 +477,7 @@ As a final step here, delete everything after the "proc unhook(): int" function 
 
 =======================================================
 
-We are now ready to introduce our process injection code.  We will use three Windows API functions to execute a basic and "loud" process injection technique covered in the https://huskyhacks.dev/2021/07/17/nim-exploit-dev/ post.  Part 1 of this post will provide the code with a broad overview for each block.  Part 2 will dig into the Winim and osproc libraries as well as the Windows API to explain the code in more detail.  
+We are now ready to introduce our process injection code.  We will use three Windows API functions to execute a basic and "loud" process injection technique covered in the [https://huskyhacks.dev/2021/07/17/nim-exploit-dev/](https://huskyhacks.dev/2021/07/17/nim-exploit-dev/) post.  Part 1 of this post will provide the code with a broad overview for each block.  Part 2 will dig into the Winim and osproc libraries as well as the Windows API to explain the code in more detail.  
 
 The three Windows API functions we are going to use to inject our shell code are:
 
@@ -489,7 +491,7 @@ You will see these functions appear in our Nim code below, but I will not discus
 
 First, we need some shellcode to inject and then execute.  To prepare our shellcode we will use our Attacker Machine to run an msfvenom command that will output the shellcode to a file.  We need to know the IP address of the Attacker Machine and an unused TCP port we will run our Metasploit listener on.  In my case these are 192.168.3.28 and 1701 respectively.  Your IP address will likely be different, and feel free to choose a different port number as long as it is not already in use.
 
-#### Attacker Machine 
+ - Attacker Machine -  
 
 In a terminal window:
 
@@ -515,7 +517,7 @@ LPORT=1701  :  Set the TCP port to connect to as 1701.
 
 ![](/images/nim_proc_inject_pt1/37. msfvenom.png)
 
-#### Development Machine
+ - Development Machine - 
 
 We need to use two items from the output of the msfvenom command.  The first is the final Payload size, in my case 201391 bytes (yours may be different).  The second is the payload itself which is in the code.out file.  First let's update our code with some additional comments to document what we are doing.  This code should start immediately following the end of the C++ code section:
 
@@ -548,7 +550,7 @@ The shellcode itself will take a bit more to get into our code file.  As you can
 trimmed
 ![](/images/nim_proc_inject_pt1/39. shellcode2.png)
 
-#### Attacker Machine
+ - Attacker Machine - 
 
 We use a text editor to remove the first line:  "byte[] buf = new byte[201391] { "
 
@@ -577,7 +579,7 @@ tr  :  Truncate command.
 
 \> code_stripped.out  :  Place the output of this command into the file code_stripped.out.
 
-#### Developer Machine
+ - Development Machine - 
     
 Now, you can drag and drop code_stripped.out over to your Development Machine, open it, and copy/paste the shellcode into av_bypass.nim.  I have trimmed the output here to fit in the code box.  Your actual code will be several thousand lines:
 
@@ -787,7 +789,7 @@ So, our updated compile command becomes:
     nim cpp --passl=-lpsapi --passl=-static-libstdc++ --passl=-static-libgcc "c:\projects\av_bypass.nim"
 
 ![](/images/nim_proc_inject_pt1/49. compile8.png)
-
+    
 Which results in our new av_bypass.exe program with the expected increase in file size.  Transfer the file over to your Victim Machine and execute it. 
 
 ![](/images/nim_proc_inject_pt1/50. compile9.png)
@@ -808,7 +810,7 @@ Again, our av_bypass.exe compiles successfully, with a larger file size.  Transf
 
 This means our program started the notepad.exe process in the background.  It also means our shellcode likely executed without major issue as the notepad.exe process is still running and did not crash.  Our next step would be to set up our Attacker Machine to receive the Meterpreter shell.  But first, a few additions to our compiler command to reduce the resulting file size.
 
-From the Offensive Nim Github repository and the Nim FAQ page https://nim-lang.org/faq.html , we can use additional options to speed up the executable and reduce its size:
+From the Offensive Nim Github repository and the Nim FAQ page [https://nim-lang.org/faq.html](https://nim-lang.org/faq.html) , we can use additional options to speed up the executable and reduce its size:
 
 -d:danger  :  From the Nim FAQ: "-d:danger makes the fastest binary possible while disabling all runtime safety checks including bound checks, overflow checks, nil checks and more."
 
@@ -858,10 +860,13 @@ We are ready to move on.
 
 =======================================================
 
+ - Development Machine - 
+ 
+ First, we transfer the newest av_bypass.exe file over to our Victim Machine.  Use whatever method works for you.
 
-Development Machine:  First, we transfer the newest av_bypass.exe file over to our Victim Machine.  Use whatever method works for you.
+ - Attacker Machine - 
 
-Attacker Machine:  On our Attacker Machine we need to start and configure Metasploit to receive the Meterpreter reverse shell.  Depending on your setup, your prompts and the output may look different than what is shown in the following screenshots.
+On our Attacker Machine we need to start and configure Metasploit to receive the Meterpreter reverse shell.  Depending on your setup, your prompts and the output may look different than what is shown in the following screenshots.
 
     msfconsole
 
@@ -903,7 +908,9 @@ Here we have set the payload we expect to receive to the same as our msfvenom co
 With our Attacker Machine configured and listening for the connection, we can move back to the Victim Machine.
 
 
-Victim Machine:  Ensure windows defender is turned on.  In your Windows search bar, search for "Windows Security".
+ - Victim Machine - 
+
+Ensure windows defender is turned on.  In your Windows search bar, search for "Windows Security".
 
 ![](/images/nim_proc_inject_pt1/61. defender1.png)
 
@@ -914,7 +921,7 @@ As shown above, I left Automatic sample submission off, just in case.  This is a
 When ready, double-click av_bypass.exe.  You may see a quick pop-up flash on the screen.  Check your Attacker Machine.
 
 
-Attacker Machine:
+ - Attacker Machine - 
 
 You should see a Meterpreter connection message similar to the below, with the IP addresses and port for your setup.  If all went well you should also not receive warnings or threat detection messages from Windows Defender on the Victim Machine:
 
@@ -950,7 +957,9 @@ And here we have additional confirmation we are running on the intended machine,
 
 But, how stealthy is our connection?  The answer:  not very.  
 
-Back on our Victim Machine, we can take a look at the Task Manager, specifically on the Details tab.  Here we can see the notepad.exe process running as PID 6744 (your PID will be different), even though it is not visible on our Windows Victim Machine:
+ - Victim Machine -     
+    
+We can take a look at the Task Manager, specifically on the Details tab.  Here we can see the notepad.exe process running as PID 6744 (your PID will be different), even though it is not visible on our Windows Victim Machine:
 
 ![](/images/nim_proc_inject_pt1/68. task_manager1.png)
 
@@ -975,7 +984,10 @@ Before we leave our Victim Machine, navigate to the folder with your av_bypass.e
 
 You should receive the above results showing 0 threats found.
 
-Back on our Attacker Machine, we can also take a quick look at our av_bypass.exe.  Move a copy of it to your Attacker Machine and execute a strings command:
+    
+ - Attacker Machine -     
+
+We can also take a quick look at our av_bypass.exe.  Move a copy of it to your Attacker Machine and execute a strings command:
 
     strings av_bypass.exe > strings.out
     
@@ -1026,9 +1038,9 @@ Solution:  The psapi.h header file is not getting linked properly in your compil
 
 --passl=-lpsapi  :  Tell the linker to include psapi.
 
-http://mingw.5.n7.nabble.com/Problem-using-lt-psapi-h-gt-td20642.html
+[http://mingw.5.n7.nabble.com/Problem-using-lt-psapi-h-gt-td20642.html](http://mingw.5.n7.nabble.com/Problem-using-lt-psapi-h-gt-td20642.html)
 
-https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10
+[https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10](https://stackoverflow.com/questions/55637441/getmoduleinformation-fails-on-linkage-in-windows-10)
 
 ### Run-time Errors and Troubleshooting:
 
@@ -1044,7 +1056,7 @@ Solution 2:  Statically link the .dll files at compile time to make a standalone
 
 --passl="-static -lpthread"  :  Tell the linker to statically link libwinpthread-1.dll.
 
-https://stackoverflow.com/questions/13768515/how-to-do-static-linking-of-libwinpthread-1-dll-in-mingw
+[https://stackoverflow.com/questions/13768515/how-to-do-static-linking-of-libwinpthread-1-dll-in-mingw](https://stackoverflow.com/questions/13768515/how-to-do-static-linking-of-libwinpthread-1-dll-in-mingw)
 
 
 <p>&nbsp;</p>
@@ -1054,25 +1066,25 @@ https://stackoverflow.com/questions/13768515/how-to-do-static-linking-of-libwinp
 
 =======================================================
 
--1- https://huskyhacks.dev/2021/07/17/nim-exploit-dev/  :  Original article that inspired me to try Nim and this process injection project.  Provided instructions are also for setting up the dev environment on Linux.  The techniques used here are loud and flagged immediately by A/V, but form the basis of what we do in this guide.
+-1- [https://huskyhacks.dev/2021/07/17/nim-exploit-dev/](https://huskyhacks.dev/2021/07/17/nim-exploit-dev/)  :  Original article that inspired me to try Nim and this process injection project.  Provided instructions are also for setting up the dev environment on Linux.  The techniques used here are loud and flagged immediately by A/V, but form the basis of what we do in this guide.
 
--2- https://github.com/byt3bl33d3r/OffensiveNim  :  Used two of the files from this awesome repository within the code for what we do here:  shellcode_bin.nim and clr_host_cpp_embed_bin.nim
+-2- [https://github.com/byt3bl33d3r/OffensiveNim](https://github.com/byt3bl33d3r/OffensiveNim)  :  Used two of the files from this awesome repository within the code for what we do here:  shellcode_bin.nim and clr_host_cpp_embed_bin.nim
 
--3- https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/  :  Provided the example code to load a fresh copy of ntdll.dll to avoid Windows Defender hooks on procedure calls.  There are many other techniques described in this post worth exploring.
+-3- [https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/](https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/)  :  Provided the example code to load a fresh copy of ntdll.dll to avoid Windows Defender hooks on procedure calls.  There are many other techniques described in this post worth exploring.
 
--4- https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++  :  Link stolen from the above EDR-bypass post. 
+-4- [https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++](https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++)  :  Link stolen from the above EDR-bypass post. 
 
--5- https://nim-lang.org/faq.html  :  Assisted with compiler optimization commands and general Nim topics since this was my first use of Nim.
+-5- [https://nim-lang.org/faq.html](https://nim-lang.org/faq.html)  :  Assisted with compiler optimization commands and general Nim topics since this was my first use of Nim.
 
--6- https://github.com/khchen/winim  :  This is a Nim library available on Github.  Though briefly mentioned in the post, this repository opens up the world of Windows API for Nim coders.  The readme.md puts it best:  "Winim contains Windows API, struct, and constant definitions for Nim. The definitions are translated from MinGW's Windows headers and Windows 10 SDK headers."
+-6- [https://github.com/khchen/winim](https://github.com/khchen/winim)  :  This is a Nim library available on Github.  Though briefly mentioned in the post, this repository opens up the world of Windows API for Nim coders.  The readme.md puts it best:  "Winim contains Windows API, struct, and constant definitions for Nim. The definitions are translated from MinGW's Windows headers and Windows 10 SDK headers."
 
--7- https://docs.microsoft.com/en-us/windows/win32/api/  :  Reference documentation for Windows API.
+-7- [https://docs.microsoft.com/en-us/windows/win32/api/](https://docs.microsoft.com/en-us/windows/win32/api/)  :  Reference documentation for Windows API.
 
--8- https://git-scm.com/download/win  :  Git download page for Windows
+-8- [https://git-scm.com/download/win](https://git-scm.com/download/win)  :  Git download page for Windows
 
--9- https://code.visualstudio.com/download  :  Visual Studio Code download page
+-9- [https://code.visualstudio.com/download](https://code.visualstudio.com/download)  :  Visual Studio Code download page
 
--10- https://nim-lang.org/install_windows.html  :  Nim download page for Windows
+-10- [https://nim-lang.org/install_windows.html](https://nim-lang.org/install_windows.html)  :  Nim download page for Windows
 
 <p>&nbsp;</p>
 =======================================================
