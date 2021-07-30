@@ -547,7 +547,7 @@ Substitute the number of bytes for \<payload size in bytes\>, so in my case:
 The shellcode itself will take a bit more to get into our code file.  As you can see below from my heavily trimmed output, the shellcode in code.out is over 13,000 lines long.  Fortunately we do not need to alter it much.
 
 ![](/images/nim_proc_inject_pt1/38. shellcode1.png)
-\<trimmed\>
+\<output trimmed\>
 ![](/images/nim_proc_inject_pt1/39. shellcode2.png)
 
 \<\< Attacker Machine \>\> 
@@ -1001,7 +1001,7 @@ We can also take a quick look at our av_bypass.exe.  Move a copy of it to your A
 
 ![](/images/nim_proc_inject_pt1/73. strings1.png)
 
-\<trimmed\>
+\<output trimmed\>
 
 ![](/images/nim_proc_inject_pt1/74. strings2.png)
 
