@@ -349,7 +349,7 @@ From the Offensive Nim Github, we have a rough template to embed C++ code in our
 
 However, this example is for embedding C++ code to run assembly code.  Fortunately, there is [https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/](https://s3cur3th1ssh1t.github.io/A-tale-of-EDR-bypass-methods/)  
 
-Approximately 3/4 through that post is the following code, adapted from the [https://www.ired.team](https://www.ired.team) post referenced in the comment on line #4:
+Approximately 3/4 through that post is the following code, adapted from the [https://www.ired.team](https://www.ired.team) post referenced in the comment near the top of this code block:
 
 
     ### begin av evasion (c++ code)
@@ -409,11 +409,11 @@ Approximately 3/4 through that post is the following code, adapted from the [htt
         # Every code from here is not hooked / detected from Windows API imports at runtime anymore
     
 
-In the above, I inserted only the code dealing directly with the C++ code between the av evasion comments.  This is because the section on line 53 that starts with “when isMainModule” is the main body of our code that will move to the end.  The C++ portion of this code is everything from line 8 {.emit: """   all the way to   """} on line 47.  
+In the above, I inserted only the code dealing directly with the C++ code between the av evasion comments.  This is because the section that starts with “when isMainModule” is the main body of our code that will move to the end.  The C++ portion of this code is everything from the line {.emit: """   all the way to   """} further down.  
 
 In Part Two of this post, I will look deeper into what each section of this code is doing, but as an overview, this Nim-wrapped C++ code detects the handles of the current process (our av_bypass.exe) and the ntdll.dll file loaded on initialization.  It then loads a new instance of the ntdll.dll file in memory, unlinks the old ntdll and re-maps to the new before cleaning up.
 
-As a final step here, delete everything after the "proc unhook(): int" function shown in lines 10 and 11 below and insert the comments and several blank lines to create a working area to add the process injection code:
+As a final step here, delete everything after the "proc unhook(): int" function shown near the bottom of the code and insert the comments and several blank lines to create a working area to add the process injection code:
 
     when not defined(cpp):
         {.error: "Must be compiled in cpp mode"}
@@ -1011,18 +1011,7 @@ While much of the strings are obfuscated, here we see two separate sections with
 <p>&nbsp;</p>
 =======================================================
 
-## Section 7:  Part 1 Conclusion
-
-=======================================================
-
-In closing, we successfully built and executed a Meterpreter reverse shell without detection on a fully patched Windows 10 machine with Windows Defender turned on and up to date.  We did this by first setting up our Development Machine with the needed software.  We then used a combination of Nim and C++ code which evaded Windows Defender detection by loading a second copy of ntdll.dll at runtime.  This unmonitored copy of ntdll.dll loads without Windows Defender's hooks which permits use of Windows API procedures to inject a Meterpreter payload into a spawned and suspended instance of Notepad.exe. 
-
-As noted earlier, the code produced here contains several plaintext artifacts that indicate our program is malicious.  The process injection technique used is basic, and would otherwise be considered ‘loud’ had we not unhooked ntdll.dll.  Since Microsoft constantly update their methods and signatures for detection, I do not expect this technique to remain undetected for long.  But at that point we'll have some new techniques to discover and update our code.  In Part 2 of this post, we will cover the Nim and C++ code more in depth as well as a look at the Windows API functions used to execute the injection and bypass. 
-
-<p>&nbsp;</p>
-=======================================================
-
-## Section 8:  Troubleshooting
+## Section 7:  Troubleshooting
 
 =======================================================
 
@@ -1073,6 +1062,17 @@ Solution 2:  Statically link the .dll files at compile time to make a standalone
 
 [https://stackoverflow.com/questions/13768515/how-to-do-static-linking-of-libwinpthread-1-dll-in-mingw](https://stackoverflow.com/questions/13768515/how-to-do-static-linking-of-libwinpthread-1-dll-in-mingw)
 
+
+<p>&nbsp;</p>
+=======================================================
+
+## Section 8:  Part 1 Conclusion
+
+=======================================================
+
+In closing, we successfully built and executed a Meterpreter reverse shell without detection on a fully patched Windows 10 machine with Windows Defender turned on and up to date.  We did this by first setting up our Development Machine with the needed software.  We then used a combination of Nim and C++ code which evaded Windows Defender detection by loading a second copy of ntdll.dll at runtime.  This unmonitored copy of ntdll.dll loads without Windows Defender's hooks which permits use of Windows API procedures to inject a Meterpreter payload into a spawned and suspended instance of Notepad.exe. 
+
+As noted earlier, the code produced here contains several plaintext artifacts that indicate our program is malicious.  The process injection technique used is basic, and would otherwise be considered ‘loud’ had we not unhooked ntdll.dll.  Since Microsoft constantly update their methods and signatures for detection, I do not expect this technique to remain undetected for long.  But at that point we'll have some new techniques to discover and update our code.  In Part 2 of this post, we will cover the Nim and C++ code more in depth as well as a look at the Windows API functions used to execute the injection and bypass. 
 
 <p>&nbsp;</p>
 =======================================================
