@@ -571,7 +571,7 @@ Next we need to strip the newline character at the end of each line so all of th
 
 Where:
 
-tr  :  Truncate command.
+tr  :  Translate command.
 
 -d '\n'  :  Search for and remove the delimeter for the newline character.
 
