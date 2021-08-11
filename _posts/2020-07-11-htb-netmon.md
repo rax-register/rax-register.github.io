@@ -309,7 +309,7 @@ To trigger the notification, click the Notepad/Edit box at the end of your notif
 
 ![](/images/netmon/32. nc_connection.png)
 
-If it does not give you the prompt upon displaying the “connect to [x.x.x.x]” line, just hit <Enter> one time.
+If it does not give you the prompt upon displaying the “connect to [x.x.x.x]” line, just hit \<Enter\> one time.
 
 Success!  We are system.
 
@@ -320,7 +320,7 @@ Success!  We are system.
 
 =======================================================
 
-46257.sh: https://github.com/rax-register/code_examples/blob/master/46257.sh
+46257.sh: [https://github.com/rax-register/code_examples/blob/master/46257.sh](https://github.com/rax-register/code_examples/blob/master/46257.sh)
 
 <p>&nbsp;</p>
 =======================================================
